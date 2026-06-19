@@ -29,7 +29,7 @@ export default function EmitterReveal() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh]">
+    <section id="technology" ref={sectionRef} className="relative h-[300vh]">
       <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
         <video
           ref={videoRef}

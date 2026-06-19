@@ -28,7 +28,7 @@ export default function App() {
   useEffect(() => {
     if (!ready) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true })
+    const lenis = new Lenis({ duration: 1.1, smoothWheel: true, anchors: true })
     let raf = 0
     const loop = (t: number) => { lenis.raf(t); raf = requestAnimationFrame(loop) }
     raf = requestAnimationFrame(loop)

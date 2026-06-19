@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react'
 
-const links = ['Overview', 'Technology', 'Specs']
+const links = [
+  { label: 'Overview', href: '#top' },
+  { label: 'Technology', href: '#technology' },
+  { label: 'Specs', href: '#specs' },
+]
 
 // Sticky minimal nav. Gains a subtle backdrop once the user leaves the hero.
 export default function Topbar() {
@@ -24,8 +28,8 @@ export default function Topbar() {
         </a>
         <div className="hidden items-center gap-9 md:flex">
           {links.map((l) => (
-            <a key={l} href="#" className="font-sans text-[0.9rem] text-muted transition-colors hover:text-ink">
-              {l}
+            <a key={l.label} href={l.href} className="font-sans text-[0.9rem] text-muted transition-colors hover:text-ink">
+              {l.label}
             </a>
           ))}
           <a

@@ -22,7 +22,7 @@ const rows: Row[] = [
 
 export default function DetailRows() {
   return (
-    <section className="mx-auto max-w-[1100px] px-[6vw] py-[clamp(5rem,12vh,12rem)]">
+    <section id="specs" className="mx-auto max-w-[1100px] px-[6vw] py-[clamp(5rem,12vh,12rem)]">
       {rows.map((r) => (
         <div
           key={r.n}
