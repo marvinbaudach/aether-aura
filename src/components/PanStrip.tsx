@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
+import GlassTile from './GlassTile'
 
 // Horizontal pan-lock: vertical scroll through the tall section pans a row of
 // panels sideways. One panel anchors the side-profile render, the others carry
@@ -26,23 +27,27 @@ export default function PanStrip() {
             </figcaption>
           </figure>
 
-          <div className="flex h-[64vh] w-[78vw] shrink-0 flex-col justify-between rounded-[3px] border border-hairline bg-bg-lift p-[clamp(1.6rem,3vw,3rem)] md:w-[38vw]">
-            <span className="font-sans text-[0.74rem] uppercase tracking-[0.3em] text-muted">The face</span>
-            <p className="font-display text-[clamp(1.6rem,2.8vw,2.6rem)] font-medium leading-[1.08]">
-              A sapphire lens sits level with the titanium, so nothing on the surface
-              casts a shadow on the beam.
-            </p>
-            <span className="font-sans text-[0.9rem] text-muted">Sapphire, 0.8 mm</span>
-          </div>
+          <GlassTile className="h-[64vh] w-[78vw] shrink-0 md:w-[38vw]">
+            <div className="flex h-[64vh] flex-col justify-between p-[clamp(1.6rem,3vw,3rem)]">
+              <span className="font-sans text-[0.74rem] uppercase tracking-[0.3em] text-muted">The face</span>
+              <p className="font-display text-[clamp(1.6rem,2.8vw,2.6rem)] font-medium leading-[1.08]">
+                A sapphire lens sits level with the titanium, so nothing on the surface
+                casts a shadow on the beam.
+              </p>
+              <span className="font-sans text-[0.9rem] text-muted">Sapphire, 0.8 mm</span>
+            </div>
+          </GlassTile>
 
-          <div className="flex h-[64vh] w-[78vw] shrink-0 flex-col justify-between rounded-[3px] border border-hairline bg-bg-lift p-[clamp(1.6rem,3vw,3rem)] md:w-[38vw]">
-            <span className="font-sans text-[0.74rem] uppercase tracking-[0.3em] text-muted">The pulse</span>
-            <p className="font-display text-[clamp(1.6rem,2.8vw,2.6rem)] font-medium leading-[1.08]">
-              The emitter samples your heartbeat ninety times a second and sleeps
-              between readings to save the cell.
-            </p>
-            <span className="font-sans text-[0.9rem] text-muted">90 Hz optical</span>
-          </div>
+          <GlassTile className="h-[64vh] w-[78vw] shrink-0 md:w-[38vw]">
+            <div className="flex h-[64vh] flex-col justify-between p-[clamp(1.6rem,3vw,3rem)]">
+              <span className="font-sans text-[0.74rem] uppercase tracking-[0.3em] text-muted">The pulse</span>
+              <p className="font-display text-[clamp(1.6rem,2.8vw,2.6rem)] font-medium leading-[1.08]">
+                The emitter samples your heartbeat ninety times a second and sleeps
+                between readings to save the cell.
+              </p>
+              <span className="font-sans text-[0.9rem] text-muted">90 Hz optical</span>
+            </div>
+          </GlassTile>
         </motion.div>
       </div>
     </section>
