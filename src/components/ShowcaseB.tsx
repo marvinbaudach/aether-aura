@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ease } from '../anim'
+import RevealText from './RevealText'
 
 // Second showcase, mirrored layout: the wrist silhouette holds the right side
 // while the second feature block reveals on the left.
@@ -12,21 +12,21 @@ export default function ShowcaseB() {
   return (
     <section className="px-[6vw] py-[clamp(4rem,10vh,10rem)]">
       <div ref={ref} className="relative mx-auto grid max-w-[1300px] items-center gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-18%' }}
-          transition={{ duration: 0.9, ease }}
-          className="md:order-1"
-        >
-          <h2 className="font-display text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.04]">
-            It reads light, not wires
-          </h2>
-          <p className="mt-6 max-w-[44ch] font-sans text-[1.08rem] text-muted">
-            The central emitter pulses a single cyan beam to track your heartbeat through
-            the skin. Nothing on the back of the case ever touches your wrist.
-          </p>
-        </motion.div>
+        <div className="md:order-1">
+          <RevealText
+            as="h2"
+            text="It reads light, not wires"
+            className="font-display text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.04]"
+          />
+          <RevealText
+            as="p"
+            text="The central emitter pulses a single cyan beam to track your heartbeat through the skin. Nothing on the back of the case ever touches your wrist."
+            delay={0.1}
+            stagger={0.014}
+            duration={0.5}
+            className="mt-6 max-w-[44ch] font-sans text-[1.08rem] text-muted"
+          />
+        </div>
 
         <figure className="relative overflow-hidden rounded-[3px] md:order-2">
           <motion.img

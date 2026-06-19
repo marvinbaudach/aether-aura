@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ease } from '../anim'
+import RevealText from './RevealText'
 
 // Large alternating product showcase. The exploded render parallaxes gently as
 // the section passes, with the feature copy revealing alongside.
@@ -26,20 +26,21 @@ export default function ShowcaseA() {
           </figcaption>
         </figure>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-18%' }}
-          transition={{ duration: 0.9, ease }}
-        >
-          <h2 className="font-display text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.04]">
-            Cut from one block
-          </h2>
-          <p className="mt-6 max-w-[44ch] font-sans text-[1.08rem] text-muted">
-            The Aura shell is machined from a single billet of Grade 5 titanium across
-            fourteen hours. There are no seams, no glue, and no removable back.
-          </p>
-        </motion.div>
+        <div>
+          <RevealText
+            as="h2"
+            text="Cut from one block"
+            className="font-display text-[clamp(2rem,4.4vw,3.6rem)] font-medium leading-[1.04]"
+          />
+          <RevealText
+            as="p"
+            text="The Aura shell is machined from a single billet of Grade 5 titanium across fourteen hours. There are no seams, no glue, and no removable back."
+            delay={0.1}
+            stagger={0.014}
+            duration={0.5}
+            className="mt-6 max-w-[44ch] font-sans text-[1.08rem] text-muted"
+          />
+        </div>
       </div>
     </section>
   )
