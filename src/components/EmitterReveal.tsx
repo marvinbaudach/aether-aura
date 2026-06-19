@@ -10,22 +10,44 @@ export default function EmitterReveal() {
     const section = sectionRef.current
     const video = videoRef.current
     if (!section || !video) return
+
+    // Defer loading the emitter clip until the section is about to enter the
+    // viewport. With preload="none" the browser would otherwise never fetch it
+    // in time for the scroll-scrub, while preload="auto" pulled 2.6MB up front
+    // even for users who never scroll that far.
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          video.setAttribute('preload', 'auto')
+          video.load()
+          io.disconnect()
+        }
+      },
+      { rootMargin: '400px 0px' },
+    )
+    io.observe(section)
+
     let ready = video.readyState >= 1
     let raf = 0
     const onMeta = () => { ready = true }
     video.addEventListener('loadedmetadata', onMeta)
     const tick = () => {
+      if (document.hidden) { raf = requestAnimationFrame(tick); return }
       if (ready && video.duration && !video.seeking) {
         const rect = section.getBoundingClientRect()
         const scrollable = section.offsetHeight - window.innerHeight
         const p = Math.min(1, Math.max(0, -rect.top / scrollable))
         const t = p * video.duration
-        if (Math.abs(video.currentTime - t) > 1 / 50) video.currentTime = t
+        if (Math.abs(video.currentTime - t) > 1 / 20) video.currentTime = t
       }
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
-    return () => { cancelAnimationFrame(raf); video.removeEventListener('loadedmetadata', onMeta) }
+    return () => {
+      cancelAnimationFrame(raf)
+      io.disconnect()
+      video.removeEventListener('loadedmetadata', onMeta)
+    }
   }, [])
 
   return (
@@ -34,7 +56,7 @@ export default function EmitterReveal() {
         <video
           ref={videoRef}
           className="absolute inset-0 z-0 h-full w-full object-cover"
-          muted playsInline preload="auto"
+          muted playsInline preload="none"
         >
           <source src="assets/video_emitter.mp4" type="video/mp4" />
         </video>

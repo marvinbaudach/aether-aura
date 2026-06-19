@@ -27,7 +27,12 @@ export default function App() {
 
   useEffect(() => {
     if (!ready) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    // Lenis smooth-inertia scroll fights the browser's native touch momentum on
+    // phones and adds RAF overhead for little perceived benefit on small
+    // viewports. Keep it for fine-pointer (desktop) devices only.
+    const coarse = window.matchMedia('(pointer: coarse)').matches
+    if (reduced || coarse) return
     const lenis = new Lenis({ duration: 1.1, smoothWheel: true, anchors: true })
     let raf = 0
     const loop = (t: number) => { lenis.raf(t); raf = requestAnimationFrame(loop) }

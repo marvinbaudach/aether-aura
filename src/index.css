@@ -29,4 +29,38 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  /* Kill every transform/blur animation at the source for reduced-motion users
+     instead of relying on each component to opt out. Cheap and exhaustive. */
+  .tile-tilt-soft,
+  [style*='rotateX'] { transform: none !important; will-change: auto !important; }
+  .tile-no-glare { display: none !important; }
+}
+
+/* Coarse pointers (touch): soften the 3D tilt to a near-flat angle with a
+   calmer spring feel and drop the radial glare pool, which only flickered
+   during pan/drag gestures and read as jitter. The tilt still responds to a
+   finger drag across the tile, so the surface keeps some life. */
+@media (pointer: coarse) {
+  .tile-tilt-soft { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) !important; }
+  .tile-tilt-soft:hover { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) !important; }
+  .tile-no-glare { display: none !important; }
+}
+
+/* Backdrop-blur is expensive on mid-range mobile GPUs, especially when several
+   glass tiles stack on screen at once. Drop it below the md breakpoint; the
+   translucent bg fill alone still reads as glass. */
+@media (max-width: 767px) {
+  .tile-tilt-soft { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+}
+
+/* Hero float: a cheap CSS keyframe (translateY only, GPU-composited) that
+   replaces the previous framer-motion infinite spring. It is gated behind
+   motion-safe AND a fine pointer, so touch devices and reduced-motion users
+   get a static hero instead of a permanent compositor animation. */
+@keyframes aether-float {
+  0%, 100% { transform: translateY(6px); }
+  50% { transform: translateY(-6px); }
+}
+@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
+  .motion-safe-float { animation: aether-float 7s ease-in-out infinite; will-change: transform; }
 }

@@ -29,12 +29,18 @@ export default function Hero({ onReady }: HeroProps) {
     video.addEventListener('loadeddata', signalReady, { once: true })
 
     const tick = () => {
+      // Pause the scrub when the tab is hidden — the video stays put and we
+      // stop burning RAF cycles the user can't even see.
+      if (document.hidden) { raf = requestAnimationFrame(tick); return }
       if (ready && video.duration && !video.seeking) {
         const rect = section.getBoundingClientRect()
         const scrollable = section.offsetHeight - window.innerHeight
         const p = Math.min(1, Math.max(0, -rect.top / scrollable))
         const t = p * video.duration
-        if (Math.abs(video.currentTime - t) > 1 / 50) video.currentTime = t
+        // Throttle seeks to ~20fps. Video seeking is the single most expensive
+        // operation here; on phones the previous 50fps target caused dropped
+        // frames and battery drain with no visible gain.
+        if (Math.abs(video.currentTime - t) > 1 / 20) video.currentTime = t
       }
       raf = requestAnimationFrame(tick)
     }
@@ -48,7 +54,7 @@ export default function Hero({ onReady }: HeroProps) {
         <video
           ref={videoRef}
           className="absolute inset-0 z-0 h-full w-full object-cover"
-          muted playsInline preload="auto"
+          muted playsInline preload="metadata"
         >
           <source src={SRC} type="video/mp4" />
         </video>
@@ -62,15 +68,14 @@ export default function Hero({ onReady }: HeroProps) {
           }}
         />
 
-        {/* Hero content drifts gently before the first scroll. */}
+        {/* Hero content drifts gently before the first scroll. The infinite
+            float is dropped on touch / reduced-motion to avoid a permanent
+            compositor animation competing with the scroll-scrubbed video. */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: [6, -6, 6] }}
-          transition={{
-            opacity: { duration: 1.1, ease },
-            y: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
-          }}
-          className="relative z-20 px-[6vw] text-center"
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ opacity: { duration: 1.1, ease }, y: { duration: 1.1, ease } }}
+          className="relative z-20 px-[6vw] text-center motion-safe-float"
         >
           <p className="mb-5 font-sans text-[0.78rem] uppercase tracking-[0.42em] text-accent">
             The Aura. Now forming.

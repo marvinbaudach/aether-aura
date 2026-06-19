@@ -30,12 +30,14 @@ export default function ShowcaseB() {
 
         <figure className="relative overflow-hidden rounded-[3px] md:order-2">
           <motion.img
-            src="assets/img_wrist.jpg"
             alt="The Aura standing against a dark concrete surface"
             loading="lazy"
             decoding="async"
-            style={{ y }}
-            className="block aspect-[4/5] w-full scale-110 object-cover"
+            style={{ y, willChange: 'transform' }}
+            className="block aspect-[4/5] w-full object-cover"
+            src="assets/img_wrist_900.jpg"
+            srcSet="assets/img_wrist_600.webp 600w, assets/img_wrist_900.webp 900w, assets/img_wrist.jpg 1536w"
+            sizes="(max-width: 767px) 88vw, (max-width: 1300px) 45vw, 560px"
           />
           <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[oklch(0.12_0.012_240/0.85)] to-transparent p-6 font-sans text-[clamp(0.95rem,1.6vw,1.2rem)] font-medium">
             <span className="text-accent">Titanium</span>, edge to edge

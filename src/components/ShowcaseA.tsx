@@ -14,12 +14,14 @@ export default function ShowcaseA() {
       <div ref={ref} className="relative mx-auto grid max-w-[1300px] items-center gap-[clamp(2rem,6vw,6rem)] md:grid-cols-2">
         <figure className="relative overflow-hidden rounded-[3px]">
           <motion.img
-            src="assets/img_exploded.jpg"
             alt="The Aura separated into its titanium chassis, sensor array and optics"
             loading="lazy"
             decoding="async"
-            style={{ y }}
-            className="block aspect-[4/5] w-full scale-110 object-cover"
+            style={{ y, willChange: 'transform' }}
+            className="block aspect-[4/5] w-full object-cover"
+            src="assets/img_exploded_900.jpg"
+            srcSet="assets/img_exploded_600.webp 600w, assets/img_exploded_900.webp 900w, assets/img_exploded.jpg 1536w"
+            sizes="(max-width: 767px) 88vw, (max-width: 1300px) 45vw, 560px"
           />
           <figcaption className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-[oklch(0.12_0.012_240/0.85)] to-transparent p-6 font-sans text-[clamp(0.95rem,1.6vw,1.2rem)] font-medium">
             Sealed, not <span className="text-accent">assembled</span>
