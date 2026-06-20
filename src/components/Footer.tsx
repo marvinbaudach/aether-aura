@@ -28,6 +28,7 @@ const Footer = (): JSX.Element => {
         <p className="mt-10 font-sans text-[0.8rem] text-faint">
           © 2026 AETHER · Aura. All renders and footage are AI-generated.
         </p>
+        <p className="mt-2 font-mono text-[0.7rem] text-faint/60">{__COMMIT_SHA__}</p>
       </m.div>
     </footer>
   )
