@@ -1,8 +1,11 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type JSX } from 'react'
 import type { MouseEvent } from 'react'
+import { m } from 'framer-motion'
+import AuroraGlow from './AuroraGlow'
+import Reveal from './Reveal'
 
 // Specular sheen that tracks the cursor across the reserve button.
-function SheenButton({ children }: { children: string }) {
+const SheenButton = ({ children }: { children: string }): JSX.Element => {
   const ref = useRef<HTMLButtonElement>(null)
   const [pos, setPos] = useState<{ x: number; y: number }>({ x: 50, y: 50 })
   const [lit, setLit] = useState(false)
@@ -18,36 +21,60 @@ function SheenButton({ children }: { children: string }) {
     <button
       ref={ref}
       onMouseMove={onMove}
-      onMouseEnter={() => setLit(true)}
-      onMouseLeave={() => setLit(false)}
-      className="relative overflow-hidden rounded-full border border-accent/45 bg-bg-lift px-12 py-5 font-sans text-[1.05rem] font-medium tracking-[0.01em] text-ink"
+      onMouseEnter={() => { setLit(true); }}
+      onMouseLeave={() => { setLit(false); }}
+      className="glass relative overflow-hidden rounded-full border border-accent/45 px-12 py-5 font-sans text-[1.05rem] font-medium tracking-[0.01em] text-ink transition-transform duration-300 hover:scale-[1.03]"
     >
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
           opacity: lit ? 1 : 0,
-          background: `radial-gradient(130px circle at ${pos.x}% ${pos.y}%, oklch(0.82 0.135 205 / 0.5), transparent 60%)`,
+          background: `radial-gradient(130px circle at ${String(pos.x)}% ${String(pos.y)}%, oklch(0.82 0.135 205 / 0.5), transparent 60%)`,
         }}
+      />
+      {/* One-shot rim glow: the button's border lights up bright cyan once on
+          scroll-in to draw the eye, then settles to its resting state. */}
+      <m.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-full border border-accent/45"
+        initial={{ boxShadow: '0 0 0px oklch(0.82 0.14 205 / 0)', opacity: 0.6 }}
+        whileInView={{
+          boxShadow: [
+            '0 0 0px oklch(0.82 0.14 205 / 0)',
+            '0 0 24px oklch(0.82 0.14 205 / 0.7), inset 0 0 18px oklch(0.82 0.14 205 / 0.35)',
+            '0 0 0px oklch(0.82 0.14 205 / 0)',
+          ],
+          opacity: [0.6, 1, 0.6],
+        }}
+        viewport={{ once: true, margin: '-20%' }}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
       />
       <span className="relative">{children}</span>
     </button>
   )
 }
 
-export default function CTA() {
+const CTA = (): JSX.Element => {
   return (
-    <section id="reserve" className="relative px-[6vw] py-[clamp(7rem,16vh,16rem)] text-center">
-      <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-muted">First run open</p>
-      <h2 className="mx-auto mt-6 max-w-[16ch] font-display text-[clamp(2.2rem,6vw,5rem)] font-medium leading-[1.04]">
-        Reserve the <span className="text-accent">first light</span>.
-      </h2>
-      <p className="mx-auto mt-6 max-w-[42ch] font-sans text-[1.08rem] text-muted">
-        A refundable hold secures one of the first five hundred. We ship in the order they land.
-      </p>
-      <div className="mt-12">
-        <SheenButton>Reserve your Aura</SheenButton>
-      </div>
+    <section id="reserve" className="relative overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(7rem,16vh,16rem)] text-center">
+      <AuroraGlow />
+      <Reveal className="relative">
+        <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-muted">First run open</p>
+        <h2 className="mx-auto mt-6 max-w-[16ch] font-display text-[clamp(2.2rem,6vw,5rem)] font-medium leading-[1.04] text-gradient">
+          Reserve the <span className="text-gradient-accent">first light</span>.
+        </h2>
+        <p className="mx-auto mt-6 max-w-[42ch] font-sans text-[1.08rem] text-muted">
+          A refundable hold secures one of the first five hundred. We ship in the
+          order they land.
+        </p>
+        <div className="mt-12">
+          <SheenButton>Reserve your Aura</SheenButton>
+        </div>
+        <p className="mt-6 font-sans text-[0.82rem] text-faint">From $1,290 · fully refundable</p>
+      </Reveal>
     </section>
   )
 }
+
+export default CTA
