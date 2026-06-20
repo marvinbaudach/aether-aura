@@ -1,7 +1,9 @@
-import { motion } from 'framer-motion'
+import { Fragment } from 'react'
+import type { JSX } from 'react'
+import { m } from 'framer-motion'
 import { ease } from '../anim'
 
-type RevealTextProps = {
+interface RevealTextProps {
   text: string
   className?: string
   as?: 'h2' | 'h3' | 'p'
@@ -12,15 +14,15 @@ type RevealTextProps = {
 
 // Apple-style reading reveal: each word rises and fades in from below a mask as
 // the block scrolls into view, lightly staggered. Plays once.
-export default function RevealText({
+const RevealText = ({
   text,
   className,
   as = 'p',
   delay = 0,
   stagger = 0.045,
   duration = 0.6,
-}: RevealTextProps) {
-  const Comp = as === 'h2' ? motion.h2 : as === 'h3' ? motion.h3 : motion.p
+}: RevealTextProps): JSX.Element => {
+  const Comp = as === 'h2' ? m.h2 : as === 'h3' ? m.h3 : m.p
   const words = text.split(' ')
 
   return (
@@ -33,17 +35,23 @@ export default function RevealText({
       variants={{ hidden: {}, show: { transition: { staggerChildren: stagger, delayChildren: delay } } }}
     >
       {words.map((word, i) => (
-        <span key={i} aria-hidden className="inline-block overflow-hidden align-bottom">
-          <motion.span
-            className="inline-block"
-            variants={{ hidden: { y: '115%' }, show: { y: '0%' } }}
-            transition={{ duration, ease }}
-          >
-            {word}
-          </motion.span>
-          {i < words.length - 1 ? ' ' : ''}
-        </span>
+        // The space sits *between* the clipped word wrappers (not inside them),
+        // otherwise overflow-hidden eats it and words run together.
+        <Fragment key={i}>
+          <span aria-hidden className="inline-block overflow-hidden align-bottom">
+            <m.span
+              className="inline-block"
+              variants={{ hidden: { y: '115%' }, show: { y: '0%' } }}
+              transition={{ duration, ease }}
+            >
+              {word}
+            </m.span>
+          </span>
+          {i < words.length - 1 ? ' ' : ''}
+        </Fragment>
       ))}
     </Comp>
   )
 }
+
+export default RevealText

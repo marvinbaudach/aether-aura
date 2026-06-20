@@ -3,64 +3,97 @@
 @tailwind utilities;
 
 :root {
-  /* OKLCH only. No pure black/white. Neutrals tinted toward the cool cyan
-     brand hue (~225-235). Chroma tapers near L 0/1. One saturated accent. */
-  --bg:     oklch(0.165 0.013 240);  /* deep slate-tinted black */
-  --ink:    oklch(0.950 0.006 230);  /* crisp silver white */
-  --muted:  oklch(0.660 0.014 235);  /* cool grey */
-  --accent: oklch(0.800 0.135 205);  /* single glowing cyan */
-
-  --bg-lift:  oklch(0.210 0.015 240);
-  --hairline: oklch(0.310 0.013 238);
+  /* OKLCH only. Cool slate neutrals tuned to the cyan brand hue (~205-240),
+     matching the generated cyan-on-black product renders. One saturated accent. */
+  --bg:       oklch(0.145 0.014 245);  /* deep slate-tinted black */
+  --bg-soft:  oklch(0.185 0.015 243);  /* lifted panel */
+  --bg-lift:  oklch(0.225 0.016 242);
+  --ink:      oklch(0.962 0.006 230);  /* crisp silver white */
+  --muted:    oklch(0.680 0.016 235);  /* cool grey */
+  --faint:    oklch(0.520 0.018 238);  /* dim label grey */
+  --accent:   oklch(0.820 0.140 205);  /* glowing cyan */
+  --accent-deep: oklch(0.700 0.150 215);
+  --hairline: oklch(0.330 0.013 238);
+  --hairline-soft: oklch(0.270 0.012 240);
+  --ring-track: oklch(0.300 0.013 240); /* dim track behind progress rings */
 }
 
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 
 body {
   background: var(--bg);
   color: var(--ink);
   font-family: Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
 }
 
+::selection { background: color-mix(in oklab, var(--accent) 30%, transparent); color: var(--ink); }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 8px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-deep); }
+
+/* ---- Utility classes ---- */
+
+.text-gradient {
+  background: linear-gradient(180deg, var(--ink) 0%, oklch(0.78 0.03 230) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.text-gradient-accent {
+  background: linear-gradient(120deg, var(--accent) 0%, oklch(0.92 0.07 200) 50%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.glass {
+  background: oklch(0.22 0.015 242 / 0.45);
+  border: 1px solid oklch(0.6 0.02 235 / 0.16);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 32s linear infinite; will-change: transform; }
+
+@keyframes holo-pan {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+.pulse-dot { animation: pulse-glow 1.2s ease-in-out infinite; }
+
+/* Gentle up/down drift for the hero wordmark — GPU-composited translateY only. */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(-6px); }
+  50% { transform: translateY(6px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .float-soft { animation: float-soft 7s ease-in-out infinite; will-change: transform; }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  /* Kill every transform/blur animation at the source for reduced-motion users
-     instead of relying on each component to opt out. Cheap and exhaustive. */
-  .tile-tilt-soft,
-  [style*='rotateX'] { transform: none !important; will-change: auto !important; }
-  .tile-no-glare { display: none !important; }
+  .marquee-track,
+  .pulse-dot { animation: none !important; }
+  [style*='rotateX'], [style*='rotateY'] { transform: none !important; will-change: auto !important; }
 }
 
-/* Coarse pointers (touch): soften the 3D tilt to a near-flat angle with a
-   calmer spring feel and drop the radial glare pool, which only flickered
-   during pan/drag gestures and read as jitter. The tilt still responds to a
-   finger drag across the tile, so the surface keeps some life. */
-@media (pointer: coarse) {
-  .tile-tilt-soft { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) !important; }
-  .tile-tilt-soft:hover { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) !important; }
-  .tile-no-glare { display: none !important; }
-}
-
-/* Backdrop-blur is expensive on mid-range mobile GPUs, especially when several
-   glass tiles stack on screen at once. Drop it below the md breakpoint; the
-   translucent bg fill alone still reads as glass. */
 @media (max-width: 767px) {
-  .tile-tilt-soft { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-}
-
-/* Hero float: a cheap CSS keyframe (translateY only, GPU-composited) that
-   replaces the previous framer-motion infinite spring. It is gated behind
-   motion-safe AND a fine pointer, so touch devices and reduced-motion users
-   get a static hero instead of a permanent compositor animation. */
-@keyframes aether-float {
-  0%, 100% { transform: translateY(6px); }
-  50% { transform: translateY(-6px); }
-}
-@media (prefers-reduced-motion: no-preference) and (pointer: fine) {
-  .motion-safe-float { animation: aether-float 7s ease-in-out infinite; will-change: transform; }
+  .glass-mobile-flat { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: oklch(0.2 0.015 242 / 0.72) !important; }
 }
