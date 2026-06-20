@@ -93,26 +93,32 @@ const HoloFeature = (): JSX.Element => {
           </Reveal>
         </m.div>
 
-        <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-black">
-          <div className="relative aspect-[3/4]">
-            {load ? (
-              <video
-                key={videoSrc}
-                ref={videoRef}
-                src={videoSrc}
-                className="absolute inset-0 h-full w-full object-cover"
-                muted
-                playsInline
-                loop
-                preload="none"
-                poster="assets/aura_holo_film_poster.jpg"
-              />
-            ) : (
-              <picture>
-                <source type="image/webp" srcSet="assets/aura_holo_film_poster.webp" />
-                <img src="assets/aura_holo_film_poster.jpg" alt="The Aura projecting a holographic display" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
-              </picture>
-            )}
+        {/* Center the frame in the grid track and cap its width so the derived
+            3:4 height can never exceed the viewport — that's what was clipping
+            the hologram + watch on short/narrow windows. Source and box are both
+            exactly 3:4, so object-cover shows the whole image with no crop. */}
+        <div className="flex justify-center">
+          <div className="relative w-full max-w-[min(100%,calc(82vh*3/4))] overflow-hidden rounded-[28px] border border-hairline-soft bg-black">
+            <div className="relative aspect-[3/4]">
+              {load ? (
+                <video
+                  key={videoSrc}
+                  ref={videoRef}
+                  src={videoSrc}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  muted
+                  playsInline
+                  loop
+                  preload="none"
+                  poster="assets/aura_holo_film_poster.jpg"
+                />
+              ) : (
+                <picture>
+                  <source type="image/webp" srcSet="assets/aura_holo_film_poster.webp" />
+                  <img src="assets/aura_holo_film_poster.jpg" alt="The Aura projecting a holographic display" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+                </picture>
+              )}
+            </div>
           </div>
         </div>
       </div>
