@@ -56,13 +56,11 @@ const AUTO_MS = 5200
 // satisfy WCAG 2.2.2 (Pause, Stop, Hide).
 const Highlights = (): JSX.Element | null => {
   const [index, setIndex] = useState(0)
-  const [hovered, setHovered] = useState(false)
   const reduced = useReducedMotion() ?? false
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
-  // Always auto-advances; only pauses while the pointer is over it (so it
-  // doesn't change under you mid-read) or for reduced-motion users.
-  const autoplay = !hovered && !reduced
+  // Always auto-advances; only reduced-motion users get a static frame.
+  const autoplay = !reduced
 
   useEffect(() => {
     if (!autoplay) return
@@ -117,8 +115,6 @@ const Highlights = (): JSX.Element | null => {
               aria-orientation="horizontal"
               className="flex flex-wrap gap-2"
               onKeyDown={onKeyDown}
-              onMouseEnter={() => { setHovered(true); }}
-              onMouseLeave={() => { setHovered(false); }}
             >
               {SLIDES.map((s, idx) => {
                 const selected = idx === index
@@ -165,8 +161,6 @@ const Highlights = (): JSX.Element | null => {
           aria-labelledby={`hl-tab-${slide.key}`}
           tabIndex={0}
           className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-bg-soft"
-          onMouseEnter={() => { setHovered(true); }}
-          onMouseLeave={() => { setHovered(false); }}
         >
           <div className="grid items-center gap-0 md:grid-cols-[1.1fr_0.9fr]">
             <div className="relative aspect-[4/3] w-full overflow-hidden md:aspect-[5/4]">

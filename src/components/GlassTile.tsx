@@ -10,7 +10,7 @@ interface GlassTileProps {
 // Interactive frosted tile: tracks the cursor for a soft spring-damped 3D tilt
 // and a specular glare, lifts on hover and presses on tap. All motion is
 // suppressed for reduced-motion users, who still get the static glass card.
-export default function GlassTile({ label, children }: GlassTileProps): JSX.Element {
+const GlassTile = ({ label, children }: GlassTileProps): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion() ?? false
 
@@ -56,7 +56,7 @@ export default function GlassTile({ label, children }: GlassTileProps): JSX.Elem
       whileHover={reduced ? undefined : { scale: 1.025 }}
       whileTap={reduced ? undefined : { scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-      className="glass glass-mobile-flat group relative overflow-hidden rounded-2xl p-5 text-left transition-colors duration-300 hover:border-accent/30 sm:p-6"
+      className="glass glass-mobile-flat group relative overflow-hidden rounded-2xl p-5 text-left transition-[border-color,box-shadow] duration-300 hover:border-accent/60 hover:shadow-[0_8px_32px_-8px_oklch(0.82_0.14_205/0.35),inset_0_1px_0_oklch(0.95_0.07_200/0.3)] sm:p-6"
     >
       <m.span
         aria-hidden
@@ -70,3 +70,5 @@ export default function GlassTile({ label, children }: GlassTileProps): JSX.Elem
     </m.div>
   )
 }
+
+export default GlassTile

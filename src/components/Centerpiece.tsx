@@ -1,7 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react'
-import { m, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
-import RevealText from './RevealText'
 
 const SRC_DESKTOP = 'assets/aura_hero_film.mp4'
 const SRC_MOBILE = 'assets/aura_hero_film_720.mp4'
@@ -73,10 +72,6 @@ const Centerpiece = (): JSX.Element => {
     }
   }, [scrub, videoSrc])
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end end'] })
-  const copyOpacity = useTransform(scrollYProgress, [0.04, 0.16, 0.8, 0.94], [0, 1, 1, 0])
-  const copyY = useTransform(scrollYProgress, [0.04, 0.16], [40, 0])
-
   return (
     <section ref={sectionRef} className="relative h-[300vh] bg-bg">
       <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
@@ -97,19 +92,6 @@ const Centerpiece = (): JSX.Element => {
           className="absolute inset-0 z-10"
           style={{ background: 'radial-gradient(60% 70% at 50% 50%, transparent 30%, oklch(0.13 0.013 245 / 0.5) 78%, oklch(0.13 0.013 245 / 0.92) 100%)' }}
         />
-
-        <m.div style={{ opacity: copyOpacity, y: copyY }} className="relative z-20 px-[6vw] text-center">
-          <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-accent">Cut from one block</p>
-          <RevealText
-            as="h2"
-            text="Sealed, not assembled."
-            className="mx-auto mt-5 max-w-[18ch] font-display text-[clamp(2rem,5.5vw,4.4rem)] font-medium leading-[1.04] text-gradient"
-          />
-          <p className="mx-auto mt-6 max-w-[44ch] font-sans text-[clamp(1rem,1.6vw,1.18rem)] text-muted">
-            Fourteen hours of machining from a single titanium billet. No seams,
-            no glue, no removable back — only a continuous, flawless shell.
-          </p>
-        </m.div>
       </div>
     </section>
   )
