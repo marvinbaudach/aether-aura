@@ -2,44 +2,32 @@ import type { JSX } from 'react'
 import { m } from 'framer-motion'
 import { ease } from '../anim'
 
-const groups = [
-  { h: 'Product', items: ['Overview', 'Design', 'Health', 'Hologram', 'Tech Specs'] },
-  { h: 'Buy', items: ['Reserve', 'Finishes', 'Bands', 'Trade-in'] },
-  { h: 'Support', items: ['Setup', 'Warranty', 'Contact', 'Registration'] },
-]
-
 const Footer = (): JSX.Element => {
   return (
-    <footer className="border-t border-hairline-soft px-[max(1.25rem,6vw)] py-16">
+    <footer className="relative overflow-hidden border-t border-hairline-soft px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,11rem)]">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent"
+      />
       <m.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.8, ease }}
-        className="mx-auto max-w-shell"
+        transition={{ duration: 0.9, ease }}
+        className="mx-auto max-w-shell text-center"
       >
-        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
-          <div className="col-span-2 border-b border-hairline-soft pb-8 md:col-span-1 md:border-0 md:pb-0">
-            <p className="font-display text-[clamp(1.8rem,4.5vw,2.6rem)] font-semibold leading-none tracking-[0.16em]">AETHER</p>
-            <p className="mt-3 font-sans text-[0.82rem] uppercase tracking-[0.3em] text-muted">Aura · Measured in light</p>
-          </div>
-          {groups.map((g) => (
-            <div key={g.h}>
-              <p className="font-sans text-[0.74rem] uppercase tracking-[0.28em] text-faint">{g.h}</p>
-              <ul className="mt-4 space-y-2.5">
-                {g.items.map((it) => (
-                  <li key={it}>
-                    <a href="#top" className="font-sans text-[0.95rem] text-muted transition-colors hover:text-ink">{it}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+        <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">A concept prototype</p>
+        <p className="mx-auto mt-6 max-w-[20ch] font-display text-[clamp(2.4rem,7vw,5rem)] font-medium leading-[0.98] text-gradient">
+          Measured in light.
+        </p>
+        <div className="mx-auto mt-10 flex items-center justify-center gap-3">
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+          <span className="h-px w-12 bg-hairline-soft" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
         </div>
-        <div className="mt-12 flex flex-col items-center gap-3 border-t border-hairline-soft pt-7 text-center md:flex-row md:items-center md:justify-between md:text-left">
-          <p className="font-sans text-[0.8rem] text-faint">© 2026 AETHER. A concept prototype. All renders and footage are AI-generated.</p>
-          <p className="font-sans text-[0.8rem] text-faint">Designed where elegance meets the future.</p>
-        </div>
+        <p className="mt-10 font-sans text-[0.8rem] text-faint">
+          © 2026 AETHER · Aura. All renders and footage are AI-generated.
+        </p>
       </m.div>
     </footer>
   )
