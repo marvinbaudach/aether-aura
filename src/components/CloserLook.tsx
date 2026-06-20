@@ -30,7 +30,7 @@ const CloserLook = (): JSX.Element => {
   return (
     <section id="design" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
       <div className="mx-auto max-w-shell">
-        <Reveal className="mb-12 max-w-[22ch]">
+        <Reveal className="mb-12">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Take a closer look</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.6vw,3.6rem)] font-medium leading-[1.04] text-gradient">
             Design you can feel before you read a spec.
