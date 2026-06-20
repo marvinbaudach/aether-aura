@@ -45,30 +45,51 @@ const Centerpiece = (): JSX.Element => {
       return () => { io.disconnect() }
     }
 
-    let ready = video.readyState >= 1
+    let ready = video.readyState >= 2
     let raf = 0
-    const onMeta = () => {
-      ready = true
-    }
+    let inView = true
+    let pendingSeek = false
+
+    const onMeta = () => { ready = true }
+    const onSeeked = () => { pendingSeek = false }
     video.addEventListener('loadedmetadata', onMeta)
-    const tick = () => {
-      if (document.hidden) {
-        raf = requestAnimationFrame(tick)
-        return
+    video.addEventListener('seeked', onSeeked)
+
+    // Only run the scrub loop while the section is on screen — no point
+    // burning decode budget / seeking a clip the user can't see.
+    const io = new IntersectionObserver(
+      (entries) => { entries.forEach((e) => { inView = e.isIntersecting }) },
+      { threshold: 0 },
+    )
+    io.observe(section)
+
+    const seekTo = (target: number) => {
+      if (pendingSeek) return
+      if (Math.abs(video.currentTime - target) < 1 / 12) return
+      pendingSeek = true
+      if (typeof video.fastSeek === 'function') {
+        try { video.fastSeek(target); return } catch { /* fall through */ }
       }
-      if (ready && video.duration && !video.seeking) {
+      video.currentTime = target
+    }
+
+    const tick = () => {
+      if (inView && !document.hidden && ready && video.duration && !video.seeking) {
         const rect = section.getBoundingClientRect()
         const scrollable = section.offsetHeight - window.innerHeight
-        const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
-        const target = progress * video.duration
-        if (Math.abs(video.currentTime - target) > 1 / 20) video.currentTime = target
+        if (scrollable > 0) {
+          const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
+          seekTo(progress * video.duration)
+        }
       }
       raf = requestAnimationFrame(tick)
     }
     raf = requestAnimationFrame(tick)
     return () => {
       cancelAnimationFrame(raf)
+      io.disconnect()
       video.removeEventListener('loadedmetadata', onMeta)
+      video.removeEventListener('seeked', onSeeked)
     }
   }, [scrub, videoSrc])
 
@@ -82,7 +103,7 @@ const Centerpiece = (): JSX.Element => {
           className="absolute inset-0 z-0 h-full w-full object-contain"
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           poster="assets/aura_hero_film_poster.jpg"
           autoPlay={!scrub}
         />

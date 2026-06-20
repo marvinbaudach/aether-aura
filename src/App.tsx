@@ -46,7 +46,7 @@ const App = (): JSX.Element => {
   // fights native touch momentum on phones and adds RAF overhead for little gain.
   useEffect(() => {
     if (!ready || reduced || coarse) return
-    const lenis = new Lenis({ duration: 1.1, smoothWheel: true, anchors: true })
+    const lenis = new Lenis({ duration: 0.7, smoothWheel: true, anchors: true })
     let raf = 0
     const loop = (t: number) => {
       lenis.raf(t)
