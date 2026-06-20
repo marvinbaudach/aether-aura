@@ -82,6 +82,11 @@ body {
   0%, 100% { transform: translateY(-6px); }
   50% { transform: translateY(6px); }
 }
+
+/* Ambient background light. Two glows breathe and barely wander around centre
+   on slow, offset periods so they never re-sync into a visible loop. Drift is
+   kept tiny (a couple of percent) so life is felt, not watched. transform/
+   opacity only => stays on the compositor; will-change keeps the layer promoted. */
 @media (prefers-reduced-motion: no-preference) {
   .float-soft { animation: float-soft 7s ease-in-out infinite; will-change: transform; }
 }

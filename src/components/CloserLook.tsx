@@ -13,7 +13,6 @@ interface Feature {
 const FEATURES: Feature[] = [
   { key: 'shell', label: 'Machined shell', body: 'A single billet of Grade-5 titanium, milled for fourteen hours into a seamless monocoque. There is no back panel to remove — the Aura is sealed, not assembled.', view: 'hero' },
   { key: 'profile', label: 'Slim profile', body: 'At its thinnest the chassis tapers to a knife-clean edge, so it disappears under a cuff yet still houses the full optical sensor stack.', view: 'profile' },
-  { key: 'crown', label: 'Digital crown', body: 'A precision-knurled titanium crown clicks through menus and doubles as the trigger for an on-demand vitals reading.', view: 'profile' },
   { key: 'sapphire', label: 'Level sapphire', body: 'The sapphire lens is set flush to four microns of the case, so light leaves the display without a single shadow line.', view: 'hero' },
 ]
 
@@ -42,7 +41,7 @@ const CloserLook = (): JSX.Element => {
           {/* Sticky product */}
           <div className="md:sticky md:top-24 md:h-fit">
             <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-[radial-gradient(120%_120%_at_50%_0%,oklch(0.22_0.016_242)_0%,oklch(0.145_0.014_245)_70%)]">
-              <div className="relative aspect-[4/5]">
+              <div className="relative flex aspect-[4/5] items-center justify-center py-10">
                 <AnimatePresence mode="wait">
                   <m.picture
                     key={view}
@@ -50,7 +49,7 @@ const CloserLook = (): JSX.Element => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
                     transition={{ duration: 0.55, ease }}
-                    className="absolute inset-0"
+                    className="relative h-full w-full"
                   >
                     <source type="image/webp" srcSet={img.webp} />
                     <img src={img.jpg} alt={img.alt} className="h-full w-full object-contain p-6" loading="lazy" decoding="async" />

@@ -1,5 +1,7 @@
 import { useRef, useState, type JSX } from 'react'
 import type { MouseEvent } from 'react'
+import { m } from 'framer-motion'
+import AuroraGlow from './AuroraGlow'
 import Reveal from './Reveal'
 
 // Specular sheen that tracks the cursor across the reserve button.
@@ -21,7 +23,7 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
       onMouseMove={onMove}
       onMouseEnter={() => { setLit(true); }}
       onMouseLeave={() => { setLit(false); }}
-      className="relative overflow-hidden rounded-full border border-accent/45 bg-bg-lift px-12 py-5 font-sans text-[1.05rem] font-medium tracking-[0.01em] text-ink transition-transform duration-300 hover:scale-[1.03]"
+      className="glass relative overflow-hidden rounded-full border border-accent/45 px-12 py-5 font-sans text-[1.05rem] font-medium tracking-[0.01em] text-ink transition-transform duration-300 hover:scale-[1.03]"
     >
       <span
         aria-hidden
@@ -31,6 +33,23 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
           background: `radial-gradient(130px circle at ${String(pos.x)}% ${String(pos.y)}%, oklch(0.82 0.135 205 / 0.5), transparent 60%)`,
         }}
       />
+      {/* One-shot rim glow: the button's border lights up bright cyan once on
+          scroll-in to draw the eye, then settles to its resting state. */}
+      <m.span
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-full border border-accent/45"
+        initial={{ boxShadow: '0 0 0px oklch(0.82 0.14 205 / 0)', opacity: 0.6 }}
+        whileInView={{
+          boxShadow: [
+            '0 0 0px oklch(0.82 0.14 205 / 0)',
+            '0 0 24px oklch(0.82 0.14 205 / 0.7), inset 0 0 18px oklch(0.82 0.14 205 / 0.35)',
+            '0 0 0px oklch(0.82 0.14 205 / 0)',
+          ],
+          opacity: [0.6, 1, 0.6],
+        }}
+        viewport={{ once: true, margin: '-20%' }}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+      />
       <span className="relative">{children}</span>
     </button>
   )
@@ -39,7 +58,7 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
 const CTA = (): JSX.Element => {
   return (
     <section id="reserve" className="relative overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(7rem,16vh,16rem)] text-center">
-      <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 h-[50vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.15_205/0.18),transparent_70%)] blur-3xl" />
+      <AuroraGlow />
       <Reveal className="relative">
         <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-muted">First run open</p>
         <h2 className="mx-auto mt-6 max-w-[16ch] font-display text-[clamp(2.2rem,6vw,5rem)] font-medium leading-[1.04] text-gradient">
