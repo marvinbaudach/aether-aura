@@ -1,5 +1,5 @@
-import type { JSX } from 'react'
-import { m, useReducedMotion } from 'framer-motion'
+import { useRef, useState, type JSX } from 'react'
+import { m, useInView, useReducedMotion } from 'framer-motion'
 import { ease } from '../anim'
 
 // Teal heart that pulses on a realistic "lub-dub" cadence: a strong first beat,
@@ -51,37 +51,94 @@ const Heartbeat = (): JSX.Element => {
   )
 }
 
+// "Measured in light." literally drawn by light: as the line scrolls in, a
+// clip wipes the text into existence from left to right while a thin, bright
+// laser rides the building edge. Calls onDone when the writing finishes so the
+// rest of the footer can fade in. Reduced-motion users get the static line.
+const LASER_DUR = 1.7
+const LaserLine = ({ start, reduced, onDone }: { start: boolean; reduced: boolean; onDone: () => void }): JSX.Element => {
+  const cls =
+    'max-w-[20ch] font-display text-[clamp(2.4rem,7vw,5rem)] font-medium leading-[0.98] text-gradient'
+
+  if (reduced) return <p className={`mx-auto mt-6 ${cls}`}>Measured in light.</p>
+
+  return (
+    <div className="relative mx-auto mt-6 w-fit">
+      <m.p
+        className={cls}
+        initial={{ clipPath: 'inset(0 100% 0 0)' }}
+        animate={start ? { clipPath: 'inset(0 0% 0 0)' } : { clipPath: 'inset(0 100% 0 0)' }}
+        transition={{ duration: LASER_DUR, ease }}
+        onAnimationComplete={() => { if (start) onDone() }}
+      >
+        Measured in light.
+      </m.p>
+      {/* the laser: a thin glowing blade tracking the writing edge */}
+      {start && (
+        <m.span
+          aria-hidden
+          className="pointer-events-none absolute inset-y-[-6%] w-[3px] rounded-full"
+          style={{
+            background: 'linear-gradient(to bottom, transparent, oklch(0.99 0.02 200) 18%, oklch(0.99 0.02 200) 82%, transparent)',
+            boxShadow: '0 0 10px oklch(0.92 0.08 200), 0 0 26px oklch(0.85 0.12 205 / 0.8)',
+          }}
+          initial={{ left: '0%', opacity: 0 }}
+          animate={{ left: '100%', opacity: [0, 1, 1, 0] }}
+          transition={{ duration: LASER_DUR, ease, opacity: { duration: LASER_DUR, times: [0, 0.05, 0.92, 1] } }}
+        />
+      )}
+    </div>
+  )
+}
+
 const Footer = (): JSX.Element => {
+  const ref = useRef<HTMLDivElement>(null)
+  const reduced = useReducedMotion() ?? false
+  const inView = useInView(ref, { once: true, margin: '-15%' })
+  // The footer starts empty; once the laser finishes writing the wordmark, the
+  // surrounding content fades in. Reduced-motion shows everything at once.
+  const [written, setWritten] = useState(false)
+  const revealed = reduced || written
+
+  // Eyebrow + heart sit above the wordmark, the divider + fine print below;
+  // both groups fade in together after the writing completes.
+  const fade = {
+    initial: { opacity: 0 },
+    animate: { opacity: revealed ? 1 : 0, y: revealed ? 0 : 6 },
+    transition: { duration: 0.9, ease },
+  }
+
   return (
     <footer className="relative overflow-hidden border-t border-hairline-soft px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,11rem)]">
-      <div
+      <m.div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent"
-      />
-      <m.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: revealed ? 1 : 0 }}
         transition={{ duration: 0.9, ease }}
-        className="mx-auto max-w-shell text-center"
-      >
-        <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">A concept prototype</p>
-        <div className="mx-auto mt-8 flex justify-center">
-          <Heartbeat />
-        </div>
-        <p className="mx-auto mt-6 max-w-[20ch] font-display text-[clamp(2.4rem,7vw,5rem)] font-medium leading-[0.98] text-gradient">
-          Measured in light.
-        </p>
-        <div className="mx-auto mt-10 flex items-center justify-center gap-3">
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-          <span className="h-px w-12 bg-hairline-soft" />
-          <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-        </div>
-        <p className="mt-10 font-sans text-[0.8rem] text-faint">
-          © 2026 AETHER · Aura. All renders and footage are AI-generated.
-        </p>
-        <p className="mt-2 font-mono text-[0.7rem] text-faint/60">{__COMMIT_SHA__}</p>
-      </m.div>
+      />
+      <div ref={ref} className="mx-auto max-w-shell text-center">
+        <m.div {...fade}>
+          <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">A concept prototype</p>
+          <div className="mx-auto mt-8 flex justify-center">
+            <Heartbeat />
+          </div>
+        </m.div>
+
+        <LaserLine start={inView} reduced={reduced} onDone={() => { setWritten(true) }} />
+
+        <m.div {...fade}>
+          <div className="mx-auto mt-10 flex items-center justify-center gap-3">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+            <span className="h-px w-12 bg-hairline-soft" />
+            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+          </div>
+          <p className="mt-10 font-sans text-[0.8rem] text-faint">
+            © 2026 AETHER · Aura. All renders and footage are AI-generated.
+          </p>
+          <p className="mt-2 font-mono text-[0.7rem] text-faint/60">{__COMMIT_SHA__}</p>
+        </m.div>
+      </div>
     </footer>
   )
 }

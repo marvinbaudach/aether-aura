@@ -106,9 +106,9 @@ const Highlights = (): JSX.Element | null => {
   }
 
   return (
-    <section className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,10vh,9rem)]">
+    <section className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(3rem,10vh,9rem)]">
       <div className="mx-auto max-w-shell">
-        <Reveal className="mb-10 flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <Reveal className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Get the highlights.
           </h2>
@@ -168,7 +168,7 @@ const Highlights = (): JSX.Element | null => {
           className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-bg-soft"
         >
           <div className="grid items-center gap-0 md:grid-cols-[1.1fr_0.9fr]">
-            <div className="relative aspect-video w-full overflow-hidden">
+            <div className="relative aspect-video max-h-[40vh] w-full overflow-hidden md:max-h-none">
               <AnimatePresence mode="wait">
                 <m.picture
                   key={slide.key}
@@ -188,7 +188,7 @@ const Highlights = (): JSX.Element | null => {
               </AnimatePresence>
             </div>
 
-            <div className="p-8 md:p-12">
+            <div className="p-6 md:p-12">
               <AnimatePresence mode="wait">
                 <m.div
                   key={slide.key}

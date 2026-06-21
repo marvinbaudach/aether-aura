@@ -84,10 +84,11 @@ const HeroReveal = (): JSX.Element => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.1, ease }}
           >
-            {/* Gentle vertical drift (CSS keyframe on its own element so it
-                doesn't fight framer's scroll/entrance transforms). */}
-            <div className="float-soft [filter:drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))]">
-              <h1 className="font-display text-[clamp(3.2rem,15vw,12rem)] font-medium leading-[0.9] tracking-[-0.02em] text-gradient">
+            {/* No vertical drift: a floating wordmark fights the "machined,
+                precise titanium" message — the brushed-metal sheen carries the
+                life instead. Just depth + a faint accent halo here. */}
+            <div className="[filter:drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))_drop-shadow(0_0_40px_oklch(0.7_0.13_205/0.25))]">
+              <h1 className="text-titanium font-display text-[clamp(3.2rem,15vw,12rem)] font-medium leading-[0.9] tracking-[-0.02em]">
                 AETHER
               </h1>
               <p className="mx-auto mt-7 font-sans text-[clamp(0.95rem,1.4vw,1.15rem)] tracking-[0.2em] text-ink/85">

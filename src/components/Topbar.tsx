@@ -25,7 +25,12 @@ const Topbar = (): JSX.Element => {
           <span id="brand-mark" className="grid h-6 w-6 place-items-center rounded-full border border-accent/50">
             <span className="block h-1.5 w-1.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-125" />
           </span>
-          <span id="brand-word">AETHER</span>
+          <span
+            id="brand-word"
+            style={{ textShadow: '0 0 10px oklch(0.92 0.04 210 / 0.45), 0 0 22px oklch(0.8 0.1 205 / 0.25)' }}
+          >
+            AETHER
+          </span>
         </a>
       </nav>
     </header>
