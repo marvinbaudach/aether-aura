@@ -8,6 +8,7 @@ const rows: Row[] = [
   { n: '02', h: 'Holographic sapphire display', t: 'A 0.8 mm sapphire lens set flush to the case, paired with a volumetric projection layer that lifts your data into the air above the glass.' },
   { n: '03', h: 'Optical vitals engine', t: 'A cyan emitter samples your heartbeat ninety times a second and reads it through the skin — no contacts, no shadow on the beam.' },
   { n: '04', h: 'Lifetime nuclear cell', t: 'A sealed radioisotope fuel rod keeps the Aura running for a full lifetime — never charged, never opened, never refuelled. One watch. One life. One rod.' },
+  { n: '05', h: 'Abyss-sealed to 500 metres', t: 'The titanium monocoque keeps its seal far below where any phone would drown — and a pair of sapphire-covered lenses capture stills and 4K video of the deep, straight from your wrist.' },
 ]
 
 const Specs = (): JSX.Element => {

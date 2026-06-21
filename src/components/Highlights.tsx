@@ -44,6 +44,13 @@ const SLIDES: Slide[] = [
     body: 'The sapphire lens sits perfectly level with the machined titanium — nothing casts a shadow.',
     art: 'aura_hl_titanium',
   },
+  {
+    key: 'dive',
+    label: 'Dive',
+    title: 'Down to 500 metres.',
+    body: 'Sealed against the deep, the Aura films stills and 4K video far below where any phone would drown.',
+    art: 'aura_hl_dive',
+  },
 ]
 
 const AUTO_MS = 5200

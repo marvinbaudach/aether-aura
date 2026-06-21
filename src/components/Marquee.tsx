@@ -6,7 +6,8 @@ const ITEMS = [
   'Nuclear Cell · Never Charge',
   'Optical Vitals',
   'Standalone Calls',
-  'WR-100 Sealed',
+  '500 m Abyss-Sealed',
+  'Wrist Camera · 4K',
   'Machined From One Block',
 ]
 

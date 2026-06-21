@@ -22,20 +22,25 @@ const HeroReveal = (): JSX.Element => {
   // holds its end state across the rest of the track. Without it, framer-motion
   // extrapolates past the last point — which made the faded-out wordmark ride
   // back up into the tiles.
-  const blur = useTransform(scrollYProgress, [0, 0.55, 1], [0, 13, 13])
+  // The reveal is heavily front-loaded: every keyframe completes within the
+  // first ~third of the track so a small flick of the wheel already snaps the
+  // hero into its end state (tiles revealed, wordmark gone). The rest of the
+  // track is a deliberate hold — the visitor never has to wonder whether the
+  // animation is still running, they just see "done" almost immediately.
+  const blur = useTransform(scrollYProgress, [0, 0.42, 1], [0, 13, 13])
   const filter = useMotionTemplate`blur(${blur}px)`
-  const scale = useTransform(scrollYProgress, [0, 1], [1.04, 1.16])
-  const bgDim = useTransform(scrollYProgress, [0, 0.55, 1], [0.35, 0.72, 0.72])
+  const scale = useTransform(scrollYProgress, [0, 0.42, 1], [1.04, 1.15, 1.15])
+  const bgDim = useTransform(scrollYProgress, [0, 0.42, 1], [0.35, 0.72, 0.72])
 
-  const titleOpacity = useTransform(scrollYProgress, [0, 0.2, 1], [1, 0, 0])
-  const titleY = useTransform(scrollYProgress, [0, 0.28, 1], [0, -60, -60])
+  const titleOpacity = useTransform(scrollYProgress, [0, 0.18, 1], [1, 0, 0])
+  const titleY = useTransform(scrollYProgress, [0, 0.24, 1], [0, -60, -60])
 
-  const tilesOpacity = useTransform(scrollYProgress, [0, 0.32, 0.48, 1], [0, 0, 1, 1])
-  const tilesY = useTransform(scrollYProgress, [0, 0.32, 0.6, 1], [50, 50, 0, 0])
-  const cueOpacity = useTransform(scrollYProgress, [0, 0.12, 1], [1, 0, 0])
+  const tilesOpacity = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [0, 0, 1, 1])
+  const tilesY = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [50, 50, 0, 0])
+  const cueOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [1, 0, 0])
 
   return (
-    <section id="top" ref={ref} className="relative h-[230vh]">
+    <section id="top" ref={ref} className="relative h-[185vh]">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Defocusing lifestyle backdrop */}
         <m.div style={{ scale, filter }} className="absolute inset-0 z-0 will-change-transform">
