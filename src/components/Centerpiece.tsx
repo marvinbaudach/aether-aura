@@ -46,12 +46,16 @@ const Centerpiece = (): JSX.Element => {
       return () => { io.disconnect() }
     }
 
-    let ready = video.readyState >= 2
+    let ready = video.readyState >= 1
     let raf = 0
     let inView = true
     let pendingSeek = false
+    // `shown` is the eased playhead that chases the scroll-derived target, so
+    // the watch glides between frames instead of snapping — this is what makes
+    // the scrub read as smooth even on slower decoders.
+    let shown = video.currentTime || 0
 
-    const onMeta = () => { ready = true }
+    const onMeta = () => { ready = true; shown = video.currentTime || 0 }
     const onSeeked = () => { pendingSeek = false }
     video.addEventListener('loadedmetadata', onMeta)
     video.addEventListener('seeked', onSeeked)
@@ -64,24 +68,35 @@ const Centerpiece = (): JSX.Element => {
     )
     io.observe(section)
 
-    const seekTo = (target: number) => {
-      if (pendingSeek) return
-      if (Math.abs(video.currentTime - target) < 1 / 12) return
+    // The film is encoded all-intra (every frame a keyframe), so a seek decodes
+    // a single frame and resolves almost instantly — cheap enough to drive from
+    // scroll on weak hardware.
+    const seekTo = (t: number) => {
+      if (pendingSeek || video.seeking) return
+      if (Math.abs(video.currentTime - t) < 0.01) return
       pendingSeek = true
       if (typeof video.fastSeek === 'function') {
-        try { video.fastSeek(target); return } catch { /* fall through */ }
+        try { video.fastSeek(t); return } catch { /* fall through */ }
       }
-      video.currentTime = target
+      video.currentTime = t
+    }
+
+    const targetTime = () => {
+      const rect = section.getBoundingClientRect()
+      const scrollable = section.offsetHeight - window.innerHeight
+      if (scrollable <= 0) return shown
+      const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
+      return progress * video.duration
     }
 
     const tick = () => {
-      if (inView && !document.hidden && ready && video.duration && !video.seeking) {
-        const rect = section.getBoundingClientRect()
-        const scrollable = section.offsetHeight - window.innerHeight
-        if (scrollable > 0) {
-          const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
-          seekTo(progress * video.duration)
-        }
+      if (inView && !document.hidden && ready && video.duration) {
+        const target = targetTime()
+        // Critically-damped chase: take a fraction of the remaining distance
+        // each frame for a fluid ease, snap when close enough to stop seeking.
+        shown += (target - shown) * 0.2
+        if (Math.abs(target - shown) < 0.012) shown = target
+        seekTo(shown)
       }
       raf = requestAnimationFrame(tick)
     }
