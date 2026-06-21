@@ -2,127 +2,156 @@ import { useEffect, useRef, type JSX } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
 
-const SRC_DESKTOP = 'assets/aura_centerpiece_film.mp4'
 const SRC_MOBILE = 'assets/aura_centerpiece_film_720.mp4'
 
-// Scroll-scrubbed centerpiece: the product film is driven frame by frame by
-// scroll, so the watch swings from its titanium back around to the front and
-// settles on the display as the user advances. The camera is locked to the
-// scroll axis. Falls back to a muted autoplay loop on touch / reduced-motion
-// where scrubbing video is unreliable and costly.
+// Pre-rendered frame sequence for the scrub. Drawing decoded images to a canvas
+// is glass-smooth because there is no per-seek video decode — the whole point.
+const FRAME_COUNT = 151
+const framePath = (i: number): string =>
+  `assets/cp_frames/f_${String(i + 1).padStart(3, '0')}.jpg`
+
+// Cinematic centerpiece. On fine-pointer / motion-allowed devices the film is a
+// scroll-scrubbed image sequence painted to a <canvas>: the watch swings from
+// its titanium back round to the front and settles on the display as the user
+// scrolls. Touch / reduced-motion fall back to a muted autoplay video loop,
+// where scrubbing is unreliable and a decoded frame sequence is wasted bytes.
 const Centerpiece = (): JSX.Element => {
   const sectionRef = useRef<HTMLElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const coarse = useMediaQuery('(pointer: coarse)')
   const reduced = useReducedMotion()
-  const desktop = useMediaQuery('(min-width: 768px)')
   const scrub = !coarse && !reduced
 
-  // The `media` attribute on a <video><source> is ignored by browsers (it only
-  // works inside <picture>), so we pick the right file in JS instead — otherwise
-  // every device downloads the full-size desktop clip.
-  const videoSrc = desktop ? SRC_DESKTOP : SRC_MOBILE
-
+  // ---- Scrub path: decoded frame sequence on a canvas ----------------------
   useEffect(() => {
     const section = sectionRef.current
-    const video = videoRef.current
-    if (!section || !video) return
+    const canvas = canvasRef.current
+    if (!scrub || !section || !canvas) return
 
-    if (!scrub) {
-      // Autoplay loop fallback.
-      video.loop = true
-      const play = () => { void video.play().catch(() => undefined) }
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) play()
-            else video.pause()
-          })
-        },
-        { threshold: 0.2 },
-      )
-      io.observe(section)
-      return () => { io.disconnect() }
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const frames: HTMLImageElement[] = Array.from({ length: FRAME_COUNT }, (_, i) => {
+      const img = new Image()
+      img.decoding = 'async'
+      img.src = framePath(i)
+      return img
+    })
+
+    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const sizeCanvas = () => {
+      canvas.width = Math.round(canvas.clientWidth * dpr)
+      canvas.height = Math.round(canvas.clientHeight * dpr)
+    }
+    sizeCanvas()
+
+    // Pick the nearest already-decoded frame so a fast scroll never blocks on a
+    // not-yet-loaded image.
+    const nearestReady = (idx: number): HTMLImageElement | null => {
+      for (let d = 0; d < FRAME_COUNT; d++) {
+        const a = frames[idx - d]
+        if (a && a.complete && a.naturalWidth > 0) return a
+        const b = frames[idx + d]
+        if (b && b.complete && b.naturalWidth > 0) return b
+      }
+      return null
     }
 
-    let ready = video.readyState >= 1
+    let lastDrawn = -1
+    const draw = (idx: number) => {
+      if (idx === lastDrawn) return
+      const img = nearestReady(idx)
+      if (!img) return
+      lastDrawn = idx
+      const cw = canvas.width
+      const ch = canvas.height
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight) // contain
+      const w = img.naturalWidth * scale
+      const h = img.naturalHeight * scale
+      ctx.clearRect(0, 0, cw, ch)
+      ctx.drawImage(img, (cw - w) / 2, (ch - h) / 2, w, h)
+    }
+
     let raf = 0
     let inView = true
-    let pendingSeek = false
-    // `shown` is the eased playhead that chases the scroll-derived target, so
-    // the watch glides between frames instead of snapping — this is what makes
-    // the scrub read as smooth even on slower decoders.
-    let shown = video.currentTime || 0
-
-    const onMeta = () => { ready = true; shown = video.currentTime || 0 }
-    const onSeeked = () => { pendingSeek = false }
-    video.addEventListener('loadedmetadata', onMeta)
-    video.addEventListener('seeked', onSeeked)
-
-    // Only run the scrub loop while the section is on screen — no point
-    // burning decode budget / seeking a clip the user can't see.
+    let shown = 0
     const io = new IntersectionObserver(
       (entries) => { entries.forEach((e) => { inView = e.isIntersecting }) },
       { threshold: 0 },
     )
     io.observe(section)
 
-    // The film is encoded all-intra (every frame a keyframe), so a seek decodes
-    // a single frame and resolves almost instantly — cheap enough to drive from
-    // scroll on weak hardware.
-    const seekTo = (t: number) => {
-      if (pendingSeek || video.seeking) return
-      if (Math.abs(video.currentTime - t) < 0.01) return
-      pendingSeek = true
-      if (typeof video.fastSeek === 'function') {
-        try { video.fastSeek(t); return } catch { /* fall through */ }
-      }
-      video.currentTime = t
-    }
-
-    const targetTime = () => {
+    const targetIndex = () => {
       const rect = section.getBoundingClientRect()
       const scrollable = section.offsetHeight - window.innerHeight
       if (scrollable <= 0) return shown
       const progress = Math.min(1, Math.max(0, -rect.top / scrollable))
-      return progress * video.duration
+      return progress * (FRAME_COUNT - 1)
     }
 
     const tick = () => {
-      if (inView && !document.hidden && ready && video.duration) {
-        const target = targetTime()
-        // Critically-damped chase: take a fraction of the remaining distance
-        // each frame for a fluid ease, snap when close enough to stop seeking.
-        shown += (target - shown) * 0.2
-        if (Math.abs(target - shown) < 0.012) shown = target
-        seekTo(shown)
+      if (inView && !document.hidden) {
+        const target = targetIndex()
+        // Eased chase so the swing glides between frames instead of snapping.
+        shown += (target - shown) * 0.28
+        if (Math.abs(target - shown) < 0.25) shown = target
+        draw(Math.round(shown))
       }
       raf = requestAnimationFrame(tick)
     }
+
+    // Draw the first frame as soon as it decodes so there's no blank flash.
+    const first = frames[0]
+    if (first) {
+      if (first.complete) draw(0)
+      else first.onload = () => draw(0)
+    }
     raf = requestAnimationFrame(tick)
+
+    const onResize = () => { sizeCanvas(); lastDrawn = -1; draw(Math.round(shown)) }
+    window.addEventListener('resize', onResize)
+
     return () => {
       cancelAnimationFrame(raf)
       io.disconnect()
-      video.removeEventListener('loadedmetadata', onMeta)
-      video.removeEventListener('seeked', onSeeked)
+      window.removeEventListener('resize', onResize)
     }
-  }, [scrub, videoSrc])
+  }, [scrub])
+
+  // ---- Fallback path: muted autoplay video loop (touch / reduced-motion) ----
+  useEffect(() => {
+    const section = sectionRef.current
+    const video = videoRef.current
+    if (scrub || !section || !video) return
+    video.loop = true
+    const play = () => { void video.play().catch(() => undefined) }
+    const io = new IntersectionObserver(
+      (entries) => { entries.forEach((e) => { e.isIntersecting ? play() : video.pause() }) },
+      { threshold: 0.2 },
+    )
+    io.observe(section)
+    return () => { io.disconnect() }
+  }, [scrub])
 
   return (
-    <section ref={sectionRef} className="relative h-[300vh] bg-bg">
+    <section ref={sectionRef} className="relative h-[200vh] bg-bg">
       <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
-        <video
-          key={videoSrc}
-          ref={videoRef}
-          src={videoSrc}
-          className="absolute inset-0 z-0 h-full w-full object-cover md:object-contain"
-          muted
-          playsInline
-          preload="auto"
-          poster="assets/aura_centerpiece_film_poster.jpg"
-          autoPlay={!scrub}
-        />
+        {scrub ? (
+          <canvas ref={canvasRef} className="absolute inset-0 z-0 h-full w-full" />
+        ) : (
+          <video
+            ref={videoRef}
+            src={SRC_MOBILE}
+            className="absolute inset-0 z-0 h-full w-full object-cover"
+            muted
+            playsInline
+            preload="auto"
+            poster="assets/aura_centerpiece_film_poster.jpg"
+            autoPlay
+          />
+        )}
 
         <div
           aria-hidden
