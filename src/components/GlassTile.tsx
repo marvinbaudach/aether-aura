@@ -5,12 +5,14 @@ import { m, useMotionTemplate, useMotionValue, useReducedMotion, useSpring, useT
 interface GlassTileProps {
   label: string
   children: ReactNode
+  icon?: ReactNode
+  index?: string
 }
 
 // Interactive frosted tile: tracks the cursor for a soft spring-damped 3D tilt
 // and a specular glare, lifts on hover and presses on tap. All motion is
 // suppressed for reduced-motion users, who still get the static glass card.
-const GlassTile = ({ label, children }: GlassTileProps): JSX.Element => {
+const GlassTile = ({ label, children, icon, index }: GlassTileProps): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion() ?? false
 
@@ -63,8 +65,26 @@ const GlassTile = ({ label, children }: GlassTileProps): JSX.Element => {
         style={reduced ? undefined : { background: glare }}
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
-      <span className="relative font-sans text-[0.72rem] uppercase tracking-[0.28em] text-accent">{label}</span>
-      <p className="relative mt-3 font-display text-[clamp(0.98rem,1.5vw,1.18rem)] font-medium leading-[1.25] text-ink">
+      {/* light-catching top edge */}
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+
+      {(icon ?? index) && (
+        <div className="relative flex items-center justify-between">
+          {icon && (
+            <span className="grid h-10 w-10 place-items-center rounded-xl border border-hairline-soft bg-bg-soft/50 text-accent transition-colors duration-300 group-hover:border-accent/50 group-hover:bg-accent/10">
+              <span className="block h-5 w-5">{icon}</span>
+            </span>
+          )}
+          {index && (
+            <span className="font-mono text-[0.72rem] tabular-nums text-faint transition-colors duration-300 group-hover:text-accent">
+              {index}
+            </span>
+          )}
+        </div>
+      )}
+
+      <span className="relative mt-4 block font-sans text-[0.72rem] uppercase tracking-[0.28em] text-accent">{label}</span>
+      <p className="relative mt-2 font-display text-[clamp(0.98rem,1.5vw,1.18rem)] font-medium leading-[1.25] text-ink">
         {children}
       </p>
     </m.div>

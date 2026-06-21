@@ -3,11 +3,35 @@ import { m, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
 import { ease } from '../anim'
 import GlassTile from './GlassTile'
 
+// Line-art glyphs inherit the accent colour via currentColor.
+const IconTitanium = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" strokeLinecap="round">
+    <path d="M12 3 21 7.5v9L12 21 3 16.5v-9L12 3Z" />
+    <path d="M3 7.5 12 12l9-4.5M12 12v9" />
+  </svg>
+)
+const IconHealth = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 12h4l2-5 3 10 2-6 1.5 3H21" />
+  </svg>
+)
+const IconCalls = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6.5 4h3l1.5 4-2 1.5a11 11 0 0 0 5 5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A15 15 0 0 1 4.5 6a2 2 0 0 1 2-2Z" />
+  </svg>
+)
+const IconHologram = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+    <ellipse cx="12" cy="18.5" rx="7" ry="2" />
+    <path d="M8.6 14.8c.9-1.8 5.9-1.8 6.8 0M9.6 11.3c.8-1.3 4-1.3 4.8 0M10.7 7.8c.5-.9 2.1-.9 2.6 0" />
+  </svg>
+)
+
 const TILES = [
-  { k: 'Titanium', t: 'One block of aerospace-grade brushed titanium.' },
-  { k: 'Health', t: 'Continuous vitals, read by a single beam of light.' },
-  { k: 'Calls', t: 'Talk on your wrist — no phone required.' },
-  { k: 'Hologram', t: 'A display that lifts off the glass.' },
+  { k: 'Titanium', t: 'One block of aerospace-grade brushed titanium.', icon: IconTitanium },
+  { k: 'Health', t: 'Continuous vitals, read by a single beam of light.', icon: IconHealth },
+  { k: 'Calls', t: 'Talk on your wrist — no phone required.', icon: IconCalls },
+  { k: 'Hologram', t: 'A display that lifts off the glass.', icon: IconHologram },
 ]
 
 // Signature hero: a full-bleed lifestyle frame holds while the wordmark sits
@@ -38,6 +62,9 @@ const HeroReveal = (): JSX.Element => {
   const tilesOpacity = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [0, 0, 1, 1])
   const tilesY = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [50, 50, 0, 0])
   const cueOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [1, 0, 0])
+  // The cool duotone wash only comes in as the photo defocuses — at the start
+  // the sharp titanium watch must own the frame in its true colour.
+  const washOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0, 0.9, 0.9])
 
   return (
     <section id="top" ref={ref} className="relative h-[185vh]">
@@ -57,6 +84,12 @@ const HeroReveal = (): JSX.Element => {
               fetchPriority="high"
             />
           </picture>
+          {/* Duotone wash: recolour the warm lifestyle photo into the cool brand
+              palette so the defocused backdrop reads as cyan atmosphere rather
+              than a muddy skin-toned blur. Fades in with scroll (see washOpacity)
+              so the sharp hero watch keeps its true colour. */}
+          <m.div aria-hidden style={{ opacity: washOpacity }} className="absolute inset-0 bg-[oklch(0.55_0.14_212)] mix-blend-color" />
+          <m.div aria-hidden style={{ opacity: washOpacity }} className="absolute inset-0 bg-[radial-gradient(75%_70%_at_50%_38%,oklch(0.5_0.13_210/0.35),transparent_72%)]" />
         </m.div>
 
         {/* Dimming + vignette so text stays legible at every scroll position */}
@@ -111,8 +144,8 @@ const HeroReveal = (): JSX.Element => {
               </h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-              {TILES.map((tile) => (
-                <GlassTile key={tile.k} label={tile.k}>
+              {TILES.map((tile, i) => (
+                <GlassTile key={tile.k} label={tile.k} icon={tile.icon} index={`0${String(i + 1)}`}>
                   {tile.t}
                 </GlassTile>
               ))}
