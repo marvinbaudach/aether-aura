@@ -126,7 +126,10 @@ const AuroraGlow = (): JSX.Element => {
         target.y = 1 - y
       }
     }
+    // pointermove covers mouse hover and touch-drag; pointerdown adds the case
+    // of a plain tap, which fires no move on a touchscreen.
     window.addEventListener('pointermove', onPointer)
+    window.addEventListener('pointerdown', onPointer)
 
     const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
 
@@ -173,6 +176,7 @@ const AuroraGlow = (): JSX.Element => {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('pointermove', onPointer)
+      window.removeEventListener('pointerdown', onPointer)
       ro.disconnect()
       io.disconnect()
       gl.canvas.remove()
