@@ -7,25 +7,25 @@ interface Feature {
   key: string
   label: string
   body: string
-  view: 'hero' | 'profile'
+  webp: string
+  jpg: string
+  alt: string
 }
 
 const FEATURES: Feature[] = [
-  { key: 'shell', label: 'Machined shell', body: 'A single billet of Grade-5 titanium, milled for fourteen hours into a seamless monocoque. There is no back panel to remove — the Aura is sealed, not assembled.', view: 'hero' },
-  { key: 'profile', label: 'Slim profile', body: 'At its thinnest the chassis tapers to a knife-clean edge, so it disappears under a cuff yet still houses the full optical sensor stack.', view: 'profile' },
-  { key: 'sapphire', label: 'Level sapphire', body: 'The sapphire lens is set flush to four microns of the case, so light leaves the display without a single shadow line.', view: 'hero' },
+  { key: 'shell', label: 'Machined shell', body: 'A single billet of Grade-5 titanium, milled for fourteen hours into a seamless monocoque. There is no back panel to remove — the Aura is sealed, not assembled.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
+  { key: 'profile', label: 'Slim profile', body: 'At its thinnest the chassis tapers to a knife-clean edge, so it disappears under a cuff yet still houses the full optical sensor stack.', webp: 'assets/aura_profile_1200.webp', jpg: 'assets/aura_profile_1000.jpg', alt: 'Side profile of the titanium Aura' },
+  { key: 'sapphire', label: 'Level sapphire', body: 'The sapphire lens is set flush to four microns of the case, so light leaves the display without a single shadow line.', webp: 'assets/aura_cl_sapphire_1200.webp', jpg: 'assets/aura_cl_sapphire_1000.jpg', alt: 'Macro of the flush sapphire crystal on the Aura' },
+  { key: 'sensor', label: 'Optical back', body: 'The caseback hides a futuristic sensor array that fires fine cyan and emerald laser pulses through the skin — reading heart rate and blood glucose without a single contact pad.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
+  { key: 'core', label: 'Nuclear core', body: 'Sealed deep in the chassis, a sliver of radioisotope fuel glows around the clock — powering the Aura for decades with no port, no cable and no charge, ever.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
 ]
 
 // Sticky product viewer: a pinned render on one side, an accordion of design
-// notes on the other. Selecting a note crossfades the product to the matching
-// camera angle — the same physical watch, shown from two consistent views.
+// notes on the other. Selecting a note crossfades the product to that detail —
+// the same physical watch, shown from a consistent set of angles.
 const CloserLook = (): JSX.Element => {
   const [active, setActive] = useState(0)
-  const view = FEATURES[active]?.view ?? 'hero'
-
-  const img = view === 'profile'
-    ? { webp: 'assets/aura_profile_1200.webp', jpg: 'assets/aura_profile_1000.jpg', alt: 'Side profile of the titanium Aura' }
-    : { webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' }
+  const img = FEATURES[active] ?? FEATURES[0]!
 
   return (
     <section id="design" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
@@ -44,7 +44,7 @@ const CloserLook = (): JSX.Element => {
               <div className="relative flex aspect-[4/5] items-center justify-center py-10">
                 <AnimatePresence mode="wait">
                   <m.picture
-                    key={view}
+                    key={img.key}
                     initial={{ opacity: 0, scale: 1.05 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.98 }}
