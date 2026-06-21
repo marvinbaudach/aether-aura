@@ -43,7 +43,11 @@ const InfinityMark = ({ inView, reduced }: { inView: boolean; reduced: boolean }
 
 const BatteryRing = (): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-20%' })
+  // Trigger off the ring itself, not the whole (tall) section — otherwise on
+  // small screens the sweep finishes while the ring is still below the fold and
+  // the visitor only ever catches its end state.
+  const vizRef = useRef<HTMLDivElement>(null)
+  const inView = useInView(vizRef, { once: true, margin: '0px 0px -25% 0px' })
   const reduced = useReducedMotion() ?? false
 
   const R = 132
@@ -78,7 +82,7 @@ const BatteryRing = (): JSX.Element => {
         </Reveal>
 
         <div className="grid items-center gap-14 md:grid-cols-2">
-          <div className="relative mx-auto grid place-items-center">
+          <div ref={vizRef} className="relative mx-auto grid place-items-center">
             <svg viewBox="-30 -30 360 360" className="h-[clamp(15rem,40vw,20rem)] w-[clamp(15rem,40vw,20rem)] -rotate-90 overflow-visible">
               <circle cx="150" cy="150" r={R} stroke="var(--ring-track)" strokeWidth="14" fill="none" />
               <m.circle
