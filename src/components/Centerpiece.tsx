@@ -101,7 +101,7 @@ const Centerpiece = (): JSX.Element => {
           key={videoSrc}
           ref={videoRef}
           src={videoSrc}
-          className="absolute inset-0 z-0 h-full w-full object-contain"
+          className="absolute inset-0 z-0 h-full w-full object-cover md:object-contain"
           muted
           playsInline
           preload="auto"

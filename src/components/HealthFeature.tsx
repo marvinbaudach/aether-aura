@@ -126,7 +126,7 @@ const HealthFeature = (): JSX.Element => {
           <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft">
             <picture>
               <source type="image/webp" srcSet="assets/aura_health_800.webp 800w, assets/aura_health_1200.webp 1200w" sizes="(max-width: 767px) 90vw, 45vw" />
-              <img src="assets/aura_health_1000.jpg" alt="The Aura showing a live ECG waveform and heart rate" className="block aspect-[4/5] w-full object-cover" loading="lazy" decoding="async" />
+              <img src="assets/aura_health_1000.jpg" alt="The Aura showing a live ECG waveform and heart rate" className="block aspect-[3/4] w-full object-cover" loading="lazy" decoding="async" />
             </picture>
           </div>
         </Reveal>

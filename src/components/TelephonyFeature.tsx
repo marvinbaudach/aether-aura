@@ -96,7 +96,7 @@ const TelephonyFeature = (): JSX.Element => {
           <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft">
             <picture>
               <source type="image/webp" srcSet="assets/aura_telephony_800.webp 800w, assets/aura_telephony_1200.webp 1200w" sizes="(max-width: 767px) 90vw, 45vw" />
-              <img src="assets/aura_telephony_1000.jpg" alt="The Aura showing an incoming call from Alex Morgan" className="block aspect-[4/5] w-full object-cover" loading="lazy" decoding="async" />
+              <img src="assets/aura_telephony_1000.jpg" alt="The Aura showing an incoming call from Alex Morgan" className="block aspect-[3/4] w-full object-cover" loading="lazy" decoding="async" />
             </picture>
           </div>
         </Reveal>

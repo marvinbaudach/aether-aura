@@ -9,8 +9,10 @@ interface Slide {
   label: string
   title: string
   body: string
-  webp: string
-  jpg: string
+  // Native 16:9 landscape art so the wide gallery frame fills edge-to-edge
+  // without cropping the watch (the portrait product shots used elsewhere left
+  // the watch clipped top and bottom in this layout).
+  art: string
 }
 
 const SLIDES: Slide[] = [
@@ -19,32 +21,28 @@ const SLIDES: Slide[] = [
     label: 'Vitals',
     title: 'Your body, read in light.',
     body: 'A cyan optical beam samples your pulse ninety times a second — no contact pads, no wires.',
-    webp: 'assets/aura_health_1200.webp',
-    jpg: 'assets/aura_health_1000.jpg',
+    art: 'aura_hl_vitals',
   },
   {
     key: 'calls',
     label: 'Calls',
     title: 'Talk, untethered.',
     body: 'Answer and place calls straight from your wrist while your phone stays in another room.',
-    webp: 'assets/aura_telephony_1200.webp',
-    jpg: 'assets/aura_telephony_1000.jpg',
+    art: 'aura_hl_calls',
   },
   {
     key: 'hologram',
     label: 'Hologram',
     title: 'A display that lifts off.',
     body: 'Volumetric projection raises your metrics into the air above the sapphire face.',
-    webp: 'assets/aura_holo_1200.webp',
-    jpg: 'assets/aura_holo_1000.jpg',
+    art: 'aura_hl_hologram',
   },
   {
     key: 'titanium',
     label: 'Titanium',
     title: 'Flush to four microns.',
     body: 'The sapphire lens sits perfectly level with the machined titanium — nothing casts a shadow.',
-    webp: 'assets/aura_hero_1200.webp',
-    jpg: 'assets/aura_hero_1000.jpg',
+    art: 'aura_hl_titanium',
   },
 ]
 
@@ -163,7 +161,7 @@ const Highlights = (): JSX.Element | null => {
           className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-bg-soft"
         >
           <div className="grid items-center gap-0 md:grid-cols-[1.1fr_0.9fr]">
-            <div className="relative aspect-[4/3] w-full overflow-hidden md:aspect-[5/4]">
+            <div className="relative aspect-video w-full overflow-hidden">
               <AnimatePresence mode="wait">
                 <m.picture
                   key={slide.key}
@@ -173,8 +171,12 @@ const Highlights = (): JSX.Element | null => {
                   transition={{ duration: 0.6, ease }}
                   className="absolute inset-0"
                 >
-                  <source type="image/webp" srcSet={slide.webp} />
-                  <img src={slide.jpg} alt={slide.title} className="h-full w-full object-cover" loading="lazy" decoding="async" />
+                  <source
+                    type="image/webp"
+                    srcSet={`assets/${slide.art}_800.webp 800w, assets/${slide.art}_1200.webp 1200w`}
+                    sizes="(max-width: 767px) 100vw, 55vw"
+                  />
+                  <img src={`assets/${slide.art}_1200.jpg`} alt={slide.title} className="h-full w-full object-cover" loading="lazy" decoding="async" />
                 </m.picture>
               </AnimatePresence>
             </div>
