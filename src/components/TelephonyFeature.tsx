@@ -21,20 +21,27 @@ const CallWidget = (): JSX.Element => {
   const reduced = useReducedMotion() ?? false
 
   return (
-    <div className="relative grid place-items-center rounded-3xl border border-hairline-soft bg-bg-soft p-8">
-      <div className="relative grid place-items-center">
+    <div className="relative grid place-items-center overflow-hidden rounded-3xl border border-hairline-soft bg-bg-soft p-8">
+      <div className="relative grid h-28 w-28 place-items-center">
+        {/* Soft sonar: thin cyan light rings emanate from the avatar as it rings,
+            fading in then out so they read as a clean signal, not heavy circles.
+            Clipped by the card so they never bleed into the copy above. */}
         {!reduced &&
-          [0, 1, 2].map((n) => (
+          [0, 1, 2, 3].map((n) => (
             <m.span
               key={n}
-              className="absolute rounded-full border border-accent/40"
-              style={{ width: 96, height: 96 }}
-              animate={{ scale: [1, 2.1], opacity: [0.5, 0] }}
-              transition={{ duration: 2.4, repeat: Infinity, delay: n * 0.8, ease: 'easeOut' }}
+              aria-hidden
+              className="absolute h-20 w-20 rounded-full border border-accent/50"
+              style={{ boxShadow: '0 0 14px oklch(0.82 0.14 205 / 0.25)' }}
+              animate={{ scale: [1, 2.4], opacity: [0, 0.55, 0] }}
+              transition={{ duration: 3, repeat: Infinity, delay: n * 0.75, ease: 'easeOut', times: [0, 0.12, 1] }}
             />
           ))}
-        <div className="relative grid h-24 w-24 place-items-center rounded-full border border-accent/50 bg-bg-lift text-accent">
-          <svg viewBox="0 0 24 24" className="h-9 w-9" fill="none" stroke="currentColor" strokeWidth="1.5">
+        {/* A light arc circles the avatar — the same motif as the reserve button,
+            tying the two sections together. */}
+        <span aria-hidden className="btn-halo pointer-events-none absolute h-[5.5rem] w-[5.5rem] rounded-full" style={{ filter: 'blur(2px)' }} />
+        <div className="relative grid h-20 w-20 place-items-center rounded-full border border-accent/50 bg-bg-lift text-accent">
+          <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="12" cy="8" r="4" />
             <path d="M4 21c0-4 3.5-6 8-6s8 2 8 6" strokeLinecap="round" />
           </svg>

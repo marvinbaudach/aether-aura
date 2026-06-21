@@ -171,14 +171,11 @@ const Footer = (): JSX.Element => {
         <LaserLine start={inView} reduced={reduced} onDone={() => { setWritten(true) }} />
 
         <m.div {...fade}>
-          {/* Branded sign-off: the same orbit mark from the navbar, so the page
-              closes signed rather than trailing off into a plain divider. */}
+          {/* Branded sign-off: just the wordmark, so the page closes signed
+              rather than trailing off — the orbit mark stays unique to the navbar. */}
           <div className="mx-auto mt-12 flex items-center justify-center gap-2.5 font-display text-[1rem] font-semibold tracking-[0.24em] text-ink/85">
-            <span className="grid h-5 w-5 place-items-center rounded-full border border-accent/50">
-              <span className="block h-1 w-1 rounded-full bg-accent" />
-            </span>
             <span style={{ textShadow: '0 0 12px oklch(0.8 0.1 205 / 0.4)' }}>AETHER</span>
-            <span className="ml-0.5 font-sans text-[0.66rem] font-normal uppercase tracking-[0.3em] text-faint">Aura</span>
+            <span className="font-sans text-[0.66rem] font-normal uppercase tracking-[0.3em] text-faint">Aura</span>
           </div>
           <p className="mt-9 font-sans text-[0.8rem] text-faint">
             © 2026 AETHER · Aura. All renders and footage are AI-generated.

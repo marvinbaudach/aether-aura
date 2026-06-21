@@ -1,4 +1,4 @@
-import { useRef, type JSX } from 'react'
+import { useEffect, useRef, useState, type JSX } from 'react'
 import { m, useInView, useReducedMotion } from 'framer-motion'
 import { ease } from '../anim'
 import Reveal from './Reveal'
@@ -50,37 +50,32 @@ const EcgLine = (): JSX.Element => {
   )
 }
 
-const RINGS = [
-  { r: 52, color: 'oklch(0.82 0.14 205)', pct: 0.82, label: 'Move' },
-  { r: 40, color: 'oklch(0.7 0.15 230)', pct: 0.66, label: 'Beat' },
-  { r: 28, color: 'oklch(0.88 0.1 195)', pct: 0.9, label: 'Breathe' },
-]
-
-const Rings = (): JSX.Element => {
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-15%' })
+// Live heart-rate readout that drifts gently around a resting pulse so the card
+// reads as a live measurement rather than a frozen number. Each update ticks the
+// figure with a tiny fade so the change is felt. Static for reduced-motion.
+const BpmReadout = (): JSX.Element => {
   const reduced = useReducedMotion() ?? false
+  const [bpm, setBpm] = useState(72)
+
+  useEffect(() => {
+    if (reduced) return
+    const id = window.setInterval(() => {
+      // small organic wander, 69–75 bpm
+      setBpm(69 + Math.floor(Math.random() * 7))
+    }, 2000)
+    return () => { window.clearInterval(id) }
+  }, [reduced])
 
   return (
-    <svg ref={ref} viewBox="0 0 140 140" className="h-36 w-36 -rotate-90" aria-hidden>
-      {RINGS.map((ring) => {
-        const c = 2 * Math.PI * ring.r
-        return (
-          <g key={ring.r}>
-            <circle cx="70" cy="70" r={ring.r} stroke="var(--ring-track)" strokeWidth="9" fill="none" />
-            <m.circle
-              cx="70" cy="70" r={ring.r}
-              stroke={ring.color} strokeWidth="9" fill="none" strokeLinecap="round"
-              strokeDasharray={c}
-              initial={{ strokeDashoffset: c }}
-              animate={inView ? { strokeDashoffset: c * (1 - ring.pct) } : {}}
-              transition={{ duration: reduced ? 0 : 1.4, ease, delay: reduced ? 0 : 0.2 }}
-              style={{ filter: `drop-shadow(0 0 6px ${ring.color})` }}
-            />
-          </g>
-        )
-      })}
-    </svg>
+    <m.span
+      key={bpm}
+      className="font-display text-[clamp(2.4rem,5vw,3.4rem)] font-semibold tabular-nums text-ink"
+      initial={reduced ? false : { opacity: 0.45, y: -2 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease }}
+    >
+      {bpm}
+    </m.span>
   )
 }
 
@@ -93,32 +88,21 @@ const HealthFeature = (): JSX.Element => {
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Know your body by heart.
           </h2>
-          <p className="mx-auto mt-6 max-w-[46ch] font-sans text-[1.08rem] text-muted">
-            An optical emitter pulses a single cyan beam through the skin to read
-            your heartbeat ninety times a second — then sleeps between readings to
-            protect the cell. No contacts ever touch your wrist.
+          <p className="mx-auto mt-6 max-w-[40ch] font-sans text-[1.08rem] text-muted">
+            A single cyan beam reads your heartbeat ninety times a second — nothing
+            ever touches your skin.
           </p>
 
-          <div className="mx-auto mt-10 grid max-w-md grid-cols-[auto_1fr] items-center gap-7 rounded-3xl border border-hairline-soft bg-bg-soft p-7 text-left">
-            <Rings />
-            <div>
-              <div className="flex items-baseline gap-2">
-                <m.span
-                  className="font-display text-[clamp(2.4rem,5vw,3.4rem)] font-semibold text-ink"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  viewport={{ once: true }}
-                >
-                  72
-                </m.span>
-                <span className="font-sans text-[0.9rem] text-muted">BPM</span>
-                <span className="pulse-dot ml-1 h-2.5 w-2.5 rounded-full bg-accent" />
-              </div>
-              <div className="mt-4 w-full">
-                <EcgLine />
-              </div>
-              <p className="font-sans text-[0.82rem] text-faint">Resting · sinus rhythm</p>
+          <div className="mx-auto mt-10 max-w-md rounded-3xl border border-hairline-soft bg-bg-soft p-7 text-left">
+            <div className="flex items-baseline gap-2">
+              <BpmReadout />
+              <span className="font-sans text-[0.9rem] text-muted">BPM</span>
+              <span className="pulse-dot ml-1 h-2.5 w-2.5 rounded-full bg-accent" />
             </div>
+            <div className="mt-4 w-full">
+              <EcgLine />
+            </div>
+            <p className="font-sans text-[0.82rem] text-faint">Resting · sinus rhythm</p>
           </div>
         </Reveal>
       </div>

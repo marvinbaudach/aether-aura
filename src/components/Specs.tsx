@@ -39,7 +39,7 @@ const rows: Row[] = [
   {
     n: '01',
     h: 'Holographic sapphire display',
-    t: 'A 0.8 mm sapphire lens set flush to the case, paired with a volumetric projection layer that lifts your data into the air above the glass.',
+    t: 'A flush 0.8 mm sapphire lens that lifts your data into the air above the glass.',
     stat: '0.8',
     unit: 'mm sapphire',
     icon: DisplayIcon,
@@ -47,7 +47,7 @@ const rows: Row[] = [
   {
     n: '02',
     h: 'Lifetime nuclear cell',
-    t: 'A sealed radioisotope fuel rod keeps the Aura running for a full lifetime — never charged, never opened, never refuelled. One watch. One life. One rod.',
+    t: 'A sealed radioisotope rod runs the Aura for a lifetime — never charged, never opened.',
     stat: '∞',
     unit: 'years sealed',
     icon: AtomIcon,
@@ -55,7 +55,7 @@ const rows: Row[] = [
   {
     n: '03',
     h: 'Abyss-sealed to 500 metres',
-    t: 'The titanium monocoque keeps its seal far below where any phone would drown — and a pair of sapphire-covered lenses capture stills and 4K video of the deep, straight from your wrist.',
+    t: 'Sealed past where any phone would drown — and it films 4K of the deep from your wrist.',
     stat: '500',
     unit: 'm depth',
     icon: DepthIcon,

@@ -5,7 +5,6 @@ import { useMediaQuery } from './lib/useMediaQuery'
 import Preloader from './components/Preloader'
 import Topbar from './components/Topbar'
 import HeroReveal from './components/HeroReveal'
-import Marquee from './components/Marquee'
 import Highlights from './components/Highlights'
 import Centerpiece from './components/Centerpiece'
 import CloserLook from './components/CloserLook'
@@ -70,7 +69,6 @@ const App = (): JSX.Element => {
         <Topbar />
         <main className="bg-bg text-ink">
           <HeroReveal />
-          <Marquee />
           <Highlights />
           <Centerpiece />
           <CloserLook />

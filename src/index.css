@@ -94,6 +94,29 @@ body {
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee-track { animation: marquee 32s linear infinite; will-change: transform; }
 
+/* A single bright arc of light circling the reserve button's rim. The element
+   stays put (rotating a wide pill would swing its ends out like a clock hand);
+   instead only the conic gradient's start angle animates, so the highlight
+   travels around the edge. Needs a registered custom property to be animatable. */
+@property --halo-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+.btn-halo {
+  background: conic-gradient(
+    from var(--halo-angle),
+    transparent 0deg,
+    oklch(0.88 0.14 205 / 0.9) 55deg,
+    transparent 130deg,
+    transparent 360deg
+  );
+}
+@keyframes halo-spin { to { --halo-angle: 360deg; } }
+@media (prefers-reduced-motion: no-preference) {
+  .btn-halo { animation: halo-spin 7s linear infinite; }
+}
+
 @keyframes holo-pan {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }

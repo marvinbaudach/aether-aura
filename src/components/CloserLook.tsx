@@ -13,11 +13,11 @@ interface Feature {
 }
 
 const FEATURES: Feature[] = [
-  { key: 'shell', label: 'Machined shell', body: 'A single billet of Grade-5 titanium, milled for fourteen hours into a seamless monocoque. There is no back panel to remove — the Aura is sealed, not assembled.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
-  { key: 'profile', label: 'Slim profile', body: 'At its thinnest the chassis tapers to a knife-clean edge, so it disappears under a cuff yet still houses the full optical sensor stack.', webp: 'assets/aura_profile_1200.webp', jpg: 'assets/aura_profile_1000.jpg', alt: 'Side profile of the titanium Aura' },
-  { key: 'sapphire', label: 'Level sapphire', body: 'The sapphire lens is set flush to four microns of the case, so light leaves the display without a single shadow line.', webp: 'assets/aura_cl_sapphire_1200.webp', jpg: 'assets/aura_cl_sapphire_1000.jpg', alt: 'Macro of the flush sapphire crystal on the Aura' },
-  { key: 'sensor', label: 'Optical back', body: 'The caseback hides a futuristic sensor array that fires fine cyan and emerald laser pulses through the skin — reading heart rate and blood glucose without a single contact pad.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
-  { key: 'core', label: 'Nuclear core', body: 'Sealed deep in the chassis, a sliver of radioisotope fuel glows around the clock — powering the Aura for decades with no port, no cable and no charge, ever.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
+  { key: 'shell', label: 'Machined shell', body: 'One billet of Grade-5 titanium, milled into a seamless, sealed monocoque.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
+  { key: 'profile', label: 'Slim profile', body: 'A knife-clean edge that vanishes under a cuff — full sensor stack and all.', webp: 'assets/aura_profile_1200.webp', jpg: 'assets/aura_profile_1000.jpg', alt: 'Side profile of the titanium Aura' },
+  { key: 'sapphire', label: 'Level sapphire', body: 'Sapphire set flush to four microns — light leaves the display without a shadow.', webp: 'assets/aura_cl_sapphire_1200.webp', jpg: 'assets/aura_cl_sapphire_1000.jpg', alt: 'Macro of the flush sapphire crystal on the Aura' },
+  { key: 'sensor', label: 'Optical back', body: 'Cyan and emerald lasers read heart rate and glucose through the skin — no contact pads.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
+  { key: 'core', label: 'Nuclear core', body: 'A sliver of radioisotope fuel powers the Aura for decades — no port, no cable, no charge.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
 ]
 
 // Sticky product viewer: a pinned render on one side, an accordion of design
@@ -39,9 +39,9 @@ const CloserLook = (): JSX.Element => {
 
         <div className="grid gap-10 md:grid-cols-2 md:gap-16">
           {/* Sticky product */}
-          <div className="md:sticky md:top-24 md:h-fit">
+          <div className="mx-auto w-full max-w-sm md:max-w-none md:sticky md:top-24 md:h-fit">
             <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-[radial-gradient(120%_120%_at_50%_0%,oklch(0.22_0.016_242)_0%,oklch(0.145_0.014_245)_70%)]">
-              <div className="relative flex aspect-[4/5] items-center justify-center py-10">
+              <div className="relative flex aspect-square items-center justify-center py-8 md:aspect-[4/5] md:py-10">
                 <AnimatePresence mode="wait">
                   <m.picture
                     key={img.key}
@@ -56,6 +56,21 @@ const CloserLook = (): JSX.Element => {
                   </m.picture>
                 </AnimatePresence>
                 <div className="pointer-events-none absolute left-1/2 top-[12%] h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+                {/* Caption ties the render to the selected note — essential on
+                    mobile, where the accordion sits below the image. */}
+                <AnimatePresence mode="wait">
+                  <m.div
+                    key={img.key}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.4, ease }}
+                    className="pointer-events-none absolute inset-x-0 bottom-0 flex items-center gap-3 px-6 py-5"
+                  >
+                    <span className="font-mono text-[0.8rem] tabular-nums text-accent">{`0${String(active + 1)}`}</span>
+                    <span className="font-sans text-[0.95rem] font-medium text-ink">{img.label}</span>
+                  </m.div>
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -65,13 +80,24 @@ const CloserLook = (): JSX.Element => {
             {FEATURES.map((f, idx) => {
               const open = idx === active
               return (
-                <div key={f.key} className="border-b border-hairline-soft">
+                <div key={f.key} className="relative border-b border-hairline-soft">
+                  {/* active marker: a vertical accent bar anchors the selection */}
+                  <m.span
+                    aria-hidden
+                    className="absolute left-0 top-0 h-full w-[2px] origin-top bg-accent"
+                    initial={false}
+                    animate={{ scaleY: open ? 1 : 0, opacity: open ? 1 : 0 }}
+                    transition={{ duration: 0.3, ease }}
+                  />
                   <button
                     onClick={() => { setActive(idx); }}
                     aria-expanded={open}
-                    className="flex w-full items-center justify-between gap-4 py-6 text-left"
+                    className="flex w-full items-center gap-4 py-6 pl-5 text-left"
                   >
-                    <span className={`font-display text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium transition-colors ${open ? 'text-ink' : 'text-faint hover:text-muted'}`}>
+                    <span className={`font-mono text-[0.8rem] tabular-nums transition-colors ${open ? 'text-accent' : 'text-faint'}`}>
+                      {`0${String(idx + 1)}`}
+                    </span>
+                    <span className={`flex-1 font-display text-[clamp(1.3rem,2.4vw,1.9rem)] font-medium transition-colors ${open ? 'text-ink' : 'text-faint hover:text-muted'}`}>
                       {f.label}
                     </span>
                     <span className={`grid h-8 w-8 shrink-0 place-items-center rounded-full border transition-colors ${open ? 'border-accent/60 bg-accent/15 text-accent' : 'border-hairline text-muted'}`}>
@@ -87,7 +113,7 @@ const CloserLook = (): JSX.Element => {
                         transition={{ duration: 0.4, ease }}
                         className="overflow-hidden"
                       >
-                        <p className="pb-7 pr-8 font-sans text-[1.05rem] leading-relaxed text-muted">{f.body}</p>
+                        <p className="pb-7 pl-5 pr-8 font-sans text-[1.05rem] leading-relaxed text-muted">{f.body}</p>
                       </m.div>
                     )}
                   </AnimatePresence>
