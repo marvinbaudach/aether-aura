@@ -87,15 +87,11 @@ const HeroReveal = (): JSX.Element => {
             {/* Gentle vertical drift (CSS keyframe on its own element so it
                 doesn't fight framer's scroll/entrance transforms). */}
             <div className="float-soft [filter:drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))]">
-              <p className="mb-5 font-sans text-[0.78rem] uppercase tracking-[0.42em] text-accent">
-                The Aura · in titanium
-              </p>
               <h1 className="font-display text-[clamp(3.2rem,15vw,12rem)] font-medium leading-[0.9] tracking-[-0.02em] text-gradient">
                 AETHER
               </h1>
-              <p className="mx-auto mt-7 max-w-[42ch] font-sans text-[clamp(1rem,1.6vw,1.2rem)] text-ink/90">
-                Where elegance meets the edge of technology. A titanium smartwatch
-                that reads your body in light — and answers with a hologram.
+              <p className="mx-auto mt-7 font-sans text-[clamp(0.95rem,1.4vw,1.15rem)] tracking-[0.2em] text-ink/85">
+                Titanium · Light · Hologram
               </p>
             </div>
           </m.div>

@@ -4,6 +4,43 @@ import { ease } from '../anim'
 import { useCountUp } from '../lib/useCountUp'
 import Reveal from './Reveal'
 
+const INF_PATH =
+  'M30 30 C30 14 52 14 60 30 C68 46 90 46 90 30 C90 14 68 14 60 30 C52 46 30 46 30 30 Z'
+
+// The "lifetime" mark, alive: the lemniscate first draws itself in, then a
+// bright beam loops endlessly around both lobes — a clearer "never stops" cue
+// than the static ∞ glyph it replaces.
+const InfinityMark = ({ inView, reduced }: { inView: boolean; reduced: boolean }): JSX.Element => (
+  <svg viewBox="0 0 120 60" className="mx-auto h-[clamp(3.5rem,12vw,6rem)] w-auto" fill="none" role="img" aria-label="Runs forever">
+    <defs>
+      <linearGradient id="infBeam" x1="0" x2="1">
+        <stop offset="0%" stopColor="var(--accent)" stopOpacity="0" />
+        <stop offset="50%" stopColor="oklch(0.94 0.12 195)" />
+        <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+      </linearGradient>
+    </defs>
+    <m.path
+      d={INF_PATH}
+      stroke="color-mix(in oklab, var(--accent) 32%, transparent)"
+      strokeWidth="6" strokeLinecap="round"
+      initial={{ pathLength: 0 }}
+      animate={inView ? { pathLength: 1 } : {}}
+      transition={{ duration: reduced ? 0 : 1.5, ease }}
+    />
+    {inView && !reduced && (
+      <m.path
+        d={INF_PATH}
+        stroke="url(#infBeam)" strokeWidth="7" strokeLinecap="round"
+        pathLength={1} strokeDasharray="0.2 0.8"
+        initial={{ strokeDashoffset: 0 }}
+        animate={{ strokeDashoffset: -1 }}
+        transition={{ duration: 2.6, ease: 'linear', repeat: Infinity, repeatType: 'loop', delay: 1.3 }}
+        style={{ filter: 'drop-shadow(0 0 8px var(--accent))' }}
+      />
+    )}
+  </svg>
+)
+
 const BatteryRing = (): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '-20%' })
@@ -42,7 +79,7 @@ const BatteryRing = (): JSX.Element => {
 
         <div className="grid items-center gap-14 md:grid-cols-2">
           <div className="relative mx-auto grid place-items-center">
-            <svg viewBox="0 0 300 300" className="h-[clamp(15rem,40vw,20rem)] w-[clamp(15rem,40vw,20rem)] -rotate-90">
+            <svg viewBox="-30 -30 360 360" className="h-[clamp(15rem,40vw,20rem)] w-[clamp(15rem,40vw,20rem)] -rotate-90 overflow-visible">
               <circle cx="150" cy="150" r={R} stroke="var(--ring-track)" strokeWidth="14" fill="none" />
               <m.circle
                 cx="150" cy="150" r={R}
@@ -53,11 +90,27 @@ const BatteryRing = (): JSX.Element => {
                 transition={{ duration: reduced ? 0 : 1.6, ease, delay: reduced ? 0 : 0.2 }}
                 style={{ filter: 'drop-shadow(0 0 10px color-mix(in oklab, var(--accent) 60%, transparent))' }}
               />
+              {/* Endless travelling arc — once the ring is full, a bright comet
+                  keeps orbiting it, echoing the looping ∞ in the centre. */}
+              {inView && !reduced && (
+                <m.circle
+                  cx="150" cy="150" r={R}
+                  stroke="oklch(0.94 0.12 195)" strokeWidth="14" fill="none" strokeLinecap="round"
+                  pathLength={1} strokeDasharray="0.12 0.88"
+                  style={{ filter: 'drop-shadow(0 0 12px var(--accent))' }}
+                  initial={{ strokeDashoffset: 0, opacity: 0 }}
+                  animate={{ strokeDashoffset: -1, opacity: 1 }}
+                  transition={{
+                    strokeDashoffset: { duration: 3.4, ease: 'linear', repeat: Infinity, repeatType: 'loop', delay: 1.4 },
+                    opacity: { duration: 0.6, delay: 1.4 },
+                  }}
+                />
+              )}
             </svg>
             <div className="absolute inset-0 grid place-items-center text-center">
               <div>
                 <p className="font-sans text-[0.8rem] uppercase tracking-[0.3em] text-muted">Runs for</p>
-                <p className="font-display text-[clamp(4rem,14vw,7rem)] font-semibold leading-none text-ink">∞</p>
+                <div className="my-2"><InfinityMark inView={inView} reduced={reduced} /></div>
                 <p className="font-sans text-[0.9rem] text-muted">a lifetime, sealed</p>
               </div>
             </div>

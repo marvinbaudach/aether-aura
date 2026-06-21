@@ -56,9 +56,9 @@ const Preloader = (): JSX.Element => {
     <m.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: reduced ? 0.4 : 0.5, delay: reduced ? 0 : 0.6 } }}
-      className="fixed inset-0 z-[60] grid place-items-center bg-bg"
+      className="fixed inset-0 z-[60] grid place-items-center overflow-hidden bg-bg"
     >
-      <div className="flex flex-col items-center">
+      <div className="relative flex flex-col items-center">
         <m.div ref={markRef} exit={markExit} className="relative grid h-16 w-16 place-items-center">
           {/* faint static ring */}
           <span className="absolute inset-0 rounded-full border border-accent/25" />
@@ -99,6 +99,9 @@ const Preloader = (): JSX.Element => {
           ref={wordRef}
           exit={wordExit}
           className="mt-7 font-display text-[clamp(1.4rem,4vw,2rem)] font-medium tracking-[0.42em] text-ink"
+          style={{ textShadow: '0 0 18px oklch(0.95 0.02 230 / 0.9), 0 0 45px oklch(0.85 0.08 205 / 0.7), 0 0 90px oklch(0.7 0.12 205 / 0.55)' }}
+          animate={reduced ? undefined : { opacity: [0.95, 1, 0.95] }}
+          transition={{ repeat: Infinity, duration: 3.2, ease: 'easeInOut' }}
         >
           AETHER
         </m.p>
