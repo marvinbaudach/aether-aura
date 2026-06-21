@@ -39,18 +39,39 @@ const HoloFeature = (): JSX.Element => {
 
   useEffect(() => {
     const v = videoRef.current
-    if (!v || !load) return
+    const section = sectionRef.current
+    if (!v || !section || !load) return
+
+    let onScreen = false
+    const play = () => { void v.play().catch(() => undefined) }
+
+    // Drive playback off the whole section (not the video box) so it keeps
+    // running while anywhere near the viewport instead of pausing the moment
+    // the frame is less than a quarter visible — the cause of the "freezes".
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
-          if (e.isIntersecting) void v.play().catch(() => undefined)
+          onScreen = e.isIntersecting
+          if (onScreen) play()
           else v.pause()
         })
       },
-      { threshold: 0.25 },
+      { threshold: 0, rootMargin: '0px 0px -10% 0px' },
     )
-    io.observe(v)
-    return () => { io.disconnect(); }
+    io.observe(section)
+
+    // Resilience: a light watchdog restarts the loop if the browser ever pauses
+    // or stalls it while it should be visible (tab switch, power saving, decode
+    // hiccup) — the cause of it "standing still". An interval avoids the
+    // play()/pause() race that event-driven resumes hit.
+    const watchdog = window.setInterval(() => {
+      if (onScreen && !document.hidden && v.paused) play()
+    }, 1000)
+
+    return () => {
+      io.disconnect()
+      window.clearInterval(watchdog)
+    }
   }, [load])
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
