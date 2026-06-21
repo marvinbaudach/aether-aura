@@ -76,8 +76,8 @@ const CallWidget = (): JSX.Element => {
 const TelephonyFeature = (): JSX.Element => {
   return (
     <section id="connect" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
-      <div className="mx-auto grid max-w-shell items-center gap-12 md:grid-cols-2 md:gap-16">
-        <Reveal className="relative md:order-2">
+      <div className="mx-auto max-w-2xl">
+        <Reveal className="relative">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">On the go</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Leave the phone. Keep the call.
@@ -89,15 +89,6 @@ const TelephonyFeature = (): JSX.Element => {
           </p>
           <div className="mt-9 max-w-[360px]">
             <CallWidget />
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1} className="relative md:order-1">
-          <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft">
-            <picture>
-              <source type="image/webp" srcSet="assets/aura_telephony_800.webp 800w, assets/aura_telephony_1200.webp 1200w" sizes="(max-width: 767px) 90vw, 45vw" />
-              <img src="assets/aura_telephony_1000.jpg" alt="The Aura showing an incoming call from Alex Morgan" className="block aspect-[3/4] w-full object-cover" loading="lazy" decoding="async" />
-            </picture>
           </div>
         </Reveal>
       </div>

@@ -87,7 +87,7 @@ const Rings = (): JSX.Element => {
 const HealthFeature = (): JSX.Element => {
   return (
     <section id="health" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
-      <div className="mx-auto grid max-w-shell items-center gap-12 md:grid-cols-2 md:gap-16">
+      <div className="mx-auto max-w-2xl">
         <Reveal>
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Health, continuous</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
@@ -119,15 +119,6 @@ const HealthFeature = (): JSX.Element => {
               </div>
               <p className="font-sans text-[0.82rem] text-faint">Resting · sinus rhythm</p>
             </div>
-          </div>
-        </Reveal>
-
-        <Reveal delay={0.1} className="relative">
-          <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft">
-            <picture>
-              <source type="image/webp" srcSet="assets/aura_health_800.webp 800w, assets/aura_health_1200.webp 1200w" sizes="(max-width: 767px) 90vw, 45vw" />
-              <img src="assets/aura_health_1000.jpg" alt="The Aura showing a live ECG waveform and heart rate" className="block aspect-[3/4] w-full object-cover" loading="lazy" decoding="async" />
-            </picture>
           </div>
         </Reveal>
       </div>
