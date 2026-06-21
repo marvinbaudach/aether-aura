@@ -3,7 +3,7 @@ const ITEMS = [
   'Grade-5 Titanium',
   'Sapphire Crystal',
   'Holographic Display',
-  '40-Hour Cell',
+  'Nuclear Cell · Never Charge',
   'Optical Vitals',
   'Standalone Calls',
   'WR-100 Sealed',

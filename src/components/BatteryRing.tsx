@@ -11,26 +11,33 @@ const BatteryRing = (): JSX.Element => {
 
   const R = 132
   const C = 2 * Math.PI * R
-  const pct = 0.86
+  // The cell never depletes, so the ring sits permanently full — it reads as a
+  // power gauge that simply never empties.
+  const pct = 1
 
-  const full = useCountUp(40, inView, 1400, reduced)
-  const low = useCountUp(62, inView, 1400, reduced)
-  const fast = useCountUp(8, inView, 1400, reduced)
+  const half = useCountUp(50, inView, 1400, reduced)
+  const charges = useCountUp(0, inView, 1400, reduced)
+  const uptime = useCountUp(100, inView, 1400, reduced)
 
   const stats = [
-    { value: full, suffix: 'hrs', label: 'normal use on a full charge' },
-    { value: low, suffix: 'hrs', label: 'in Low Power Mode' },
-    { value: fast, suffix: 'hrs', label: 'from a 15-minute fast charge' },
+    { value: half, suffix: 'yr', label: 'radioisotope half-life, sealed for good' },
+    { value: charges, suffix: '', label: 'cables, adapters or charging nights' },
+    { value: uptime, suffix: '%', label: 'always-on — day, night and every year after' },
   ]
 
   return (
     <section ref={ref} className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,12rem)]">
       <div className="mx-auto max-w-shell">
         <Reveal className="mb-14 text-center">
-          <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Battery</p>
-          <h2 className="mx-auto mt-4 max-w-[18ch] font-display text-[clamp(2rem,4.6vw,3.6rem)] font-medium leading-[1.04] text-gradient">
-            All day. All night. Always a positive.
+          <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Power</p>
+          <h2 className="mx-auto mt-4 max-w-[20ch] font-display text-[clamp(2rem,4.6vw,3.6rem)] font-medium leading-[1.04] text-gradient">
+            Never charged. Never opened. Never off.
           </h2>
+          <p className="mx-auto mt-6 max-w-[52ch] font-sans text-[1.05rem] text-muted">
+            A sealed radioisotope cell powers the Aura from a sliver of fuel — no
+            port, no cable, no charging ritual. Strap it on once and let it run
+            for decades.
+          </p>
         </Reveal>
 
         <div className="grid items-center gap-14 md:grid-cols-2">
@@ -49,9 +56,9 @@ const BatteryRing = (): JSX.Element => {
             </svg>
             <div className="absolute inset-0 grid place-items-center text-center">
               <div>
-                <p className="font-sans text-[0.8rem] uppercase tracking-[0.3em] text-muted">Up to</p>
-                <p className="font-display text-[clamp(3.5rem,12vw,6rem)] font-semibold leading-none text-ink tabular-nums">{full}</p>
-                <p className="font-sans text-[0.9rem] text-muted">hours</p>
+                <p className="font-sans text-[0.8rem] uppercase tracking-[0.3em] text-muted">Runs for</p>
+                <p className="font-display text-[clamp(4rem,14vw,7rem)] font-semibold leading-none text-ink">∞</p>
+                <p className="font-sans text-[0.9rem] text-muted">a lifetime, sealed</p>
               </div>
             </div>
           </div>
