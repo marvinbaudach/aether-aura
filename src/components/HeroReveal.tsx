@@ -61,6 +61,13 @@ const HeroReveal = (): JSX.Element => {
           className="absolute inset-0 z-10 bg-[radial-gradient(70%_70%_at_50%_42%,transparent_0%,oklch(0.13_0.013_245/0.55)_70%,oklch(0.13_0.013_245/0.9)_100%)]"
         />
         <div aria-hidden className="absolute inset-x-0 bottom-0 z-10 h-[42vh] bg-gradient-to-b from-transparent to-bg" />
+        {/* Central scrim: the vignette darkens the edges but leaves the bright
+            watch in the middle — exactly behind the wordmark — so add a soft
+            dark pool there to keep the title and copy legible. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 z-10 bg-[radial-gradient(50%_42%_at_50%_46%,oklch(0.13_0.013_245/0.6)_0%,oklch(0.13_0.013_245/0.32)_45%,transparent_72%)]"
+        />
 
         {/* Wordmark layer */}
         <m.div
@@ -74,14 +81,14 @@ const HeroReveal = (): JSX.Element => {
           >
             {/* Gentle vertical drift (CSS keyframe on its own element so it
                 doesn't fight framer's scroll/entrance transforms). */}
-            <div className="float-soft">
+            <div className="float-soft [filter:drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))]">
               <p className="mb-5 font-sans text-[0.78rem] uppercase tracking-[0.42em] text-accent">
                 The Aura · in titanium
               </p>
               <h1 className="font-display text-[clamp(3.2rem,15vw,12rem)] font-medium leading-[0.9] tracking-[-0.02em] text-gradient">
                 AETHER
               </h1>
-              <p className="mx-auto mt-7 max-w-[42ch] font-sans text-[clamp(1rem,1.6vw,1.2rem)] text-muted">
+              <p className="mx-auto mt-7 max-w-[42ch] font-sans text-[clamp(1rem,1.6vw,1.2rem)] text-ink/90">
                 Where elegance meets the edge of technology. A titanium smartwatch
                 that reads your body in light — and answers with a hologram.
               </p>
