@@ -79,7 +79,7 @@ const HoloFeature = (): JSX.Element => {
   const glow = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.7, 0.3])
 
   return (
-    <section id="hologram" ref={sectionRef} className="relative overflow-hidden bg-bg px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,12rem)]">
+    <section id="hologram" ref={sectionRef} className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       {/* ambient glow */}
       <m.div
         aria-hidden

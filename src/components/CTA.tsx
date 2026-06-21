@@ -81,7 +81,7 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
 
 const CTA = (): JSX.Element => {
   return (
-    <section id="reserve" className="relative overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(7rem,16vh,16rem)] text-center">
+    <section id="reserve" className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">
       <AuroraGlow />
       <Reveal className="relative">
         <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-muted">First run open</p>

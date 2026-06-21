@@ -67,7 +67,7 @@ const HeroReveal = (): JSX.Element => {
   const washOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0, 0.9, 0.9])
 
   return (
-    <section id="top" ref={ref} className="relative h-[185vh]">
+    <section id="top" ref={ref} className="relative h-[185vh] snap-start">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* Defocusing lifestyle backdrop */}
         <m.div style={{ scale, filter }} className="absolute inset-0 z-0 will-change-transform">

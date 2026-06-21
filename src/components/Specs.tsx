@@ -129,7 +129,7 @@ const SpecRow = ({ r }: { r: Row }): JSX.Element => {
 
 const Specs = (): JSX.Element => {
   return (
-    <section id="specs" className="mx-auto max-w-shell px-[max(1.25rem,6vw)] py-[clamp(5rem,12vh,12rem)]">
+    <section id="specs" className="mx-auto flex min-h-svh max-w-shell snap-start flex-col justify-center px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       {rows.map((r) => (
         <SpecRow key={r.n} r={r} />
       ))}

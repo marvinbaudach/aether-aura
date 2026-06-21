@@ -81,8 +81,8 @@ const BpmReadout = (): JSX.Element => {
 
 const HealthFeature = (): JSX.Element => {
   return (
-    <section id="health" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
-      <div className="mx-auto max-w-2xl text-center">
+    <section id="health" className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+      <div className="mx-auto w-full max-w-2xl text-center">
         <Reveal>
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Health, continuous</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">

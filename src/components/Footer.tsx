@@ -152,7 +152,7 @@ const Footer = (): JSX.Element => {
   }
 
   return (
-    <footer className="relative overflow-hidden border-t border-hairline-soft px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,11rem)]">
+    <footer className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden border-t border-hairline-soft px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       <m.div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-0 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent"

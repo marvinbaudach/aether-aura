@@ -67,8 +67,8 @@ const BatteryRing = (): JSX.Element => {
   ]
 
   return (
-    <section ref={ref} className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(5rem,14vh,12rem)]">
-      <div className="mx-auto max-w-shell">
+    <section ref={ref} className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+      <div className="mx-auto w-full max-w-shell">
         <Reveal className="mb-14 text-center">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Power</p>
           <h2 className="mx-auto mt-4 max-w-[20ch] font-display text-[clamp(2rem,4.6vw,3.6rem)] font-medium leading-[1.04] text-gradient">

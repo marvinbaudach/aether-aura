@@ -106,8 +106,8 @@ const Highlights = (): JSX.Element | null => {
   }
 
   return (
-    <section className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(3rem,10vh,9rem)]">
-      <div className="mx-auto max-w-shell">
+    <section className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+      <div className="mx-auto w-full max-w-shell">
         <Reveal className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Get the highlights.

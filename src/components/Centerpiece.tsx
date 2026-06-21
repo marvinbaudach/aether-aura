@@ -136,7 +136,7 @@ const Centerpiece = (): JSX.Element => {
   }, [scrub])
 
   return (
-    <section ref={sectionRef} className="relative h-[200vh] bg-bg">
+    <section ref={sectionRef} className="relative h-[200vh] snap-start bg-bg">
       <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
         {scrub ? (
           <canvas ref={canvasRef} className="absolute inset-0 z-0 h-full w-full" />
