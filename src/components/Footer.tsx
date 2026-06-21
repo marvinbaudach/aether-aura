@@ -2,51 +2,94 @@ import { useRef, useState, type JSX } from 'react'
 import { m, useInView, useReducedMotion } from 'framer-motion'
 import { ease } from '../anim'
 
-// Teal heart that pulses on a realistic "lub-dub" cadence: a strong first beat,
-// a softer second, then a rest — the same double-thump the optical vitals engine
-// reads. Held static for reduced-motion users. The shape is shaded with a
-// radial gradient plus a specular highlight so it reads as a rounded, 3D body,
-// and a blurred copy underneath glows in time so the beat carries at a glance.
-const Heartbeat = (): JSX.Element => {
+// A faceted sapphire — the footer's emblem. The Aura's whole story is light
+// caught and bent (sapphire crystal, optical vitals, the holographic display),
+// so a cut gem belongs here in a way a heart never did: each facet is shaded a
+// slightly different cyan to read as refraction, a soft aura breathes beneath
+// it, and a specular glint periodically sweeps across the stone. Held static
+// for reduced-motion users.
+const GEM_OUTLINE = 'M14 5 H34 L43 17 L24 43 L5 17 Z'
+
+const Gem = (): JSX.Element => {
   const reduced = useReducedMotion() ?? false
-  // Keyframes of the cardiac cycle, normalised to one ~1.4s loop.
-  const beat = { scale: [1, 1.22, 1.02, 1.13, 1, 1], times: [0, 0.1, 0.2, 0.3, 0.42, 1] }
-  const D = 1.4
-  // Clean, symmetric heart silhouette.
-  const PATH =
-    'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'
 
   return (
     <div className="relative grid h-16 w-16 place-items-center">
-      {/* glow */}
-      <m.svg
-        viewBox="0 0 24 24" aria-hidden
-        className="absolute h-12 w-12 text-accent blur-md"
-        animate={reduced ? undefined : { opacity: [0.3, 0.75, 0.4, 0.6, 0.3], scale: beat.scale }}
-        transition={reduced ? undefined : { duration: D, times: beat.times, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <path d={PATH} fill="currentColor" />
-      </m.svg>
-      {/* shaded 3D heart */}
-      <m.svg
-        viewBox="0 0 24 24" role="img" aria-label="Heartbeat"
-        className="relative h-11 w-11"
-        style={{ transformOrigin: 'center', filter: 'drop-shadow(0 3px 5px oklch(0.13 0.013 245 / 0.6))' }}
-        animate={reduced ? undefined : { scale: beat.scale }}
-        transition={reduced ? undefined : { duration: D, times: beat.times, repeat: Infinity, ease: 'easeInOut' }}
+      {/* breathing aura */}
+      <m.div
+        aria-hidden
+        className="absolute h-14 w-14 rounded-full"
+        style={{ background: 'radial-gradient(circle, oklch(0.82 0.14 205 / 0.5), transparent 68%)', filter: 'blur(6px)' }}
+        animate={reduced ? undefined : { opacity: [0.4, 0.78, 0.4], scale: [0.9, 1.08, 0.9] }}
+        transition={reduced ? undefined : { duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+      />
+      <svg
+        viewBox="0 0 48 48" role="img" aria-label="Faceted sapphire"
+        className="relative h-12 w-12 overflow-visible"
+        style={{ filter: 'drop-shadow(0 4px 8px oklch(0.13 0.013 245 / 0.65))' }}
       >
         <defs>
-          {/* Body shading: bright teal top-left lobe → deep teal base. */}
-          <radialGradient id="heart3d" cx="38%" cy="30%" r="78%">
-            <stop offset="0%" stopColor="oklch(0.92 0.13 195)" />
-            <stop offset="42%" stopColor="oklch(0.78 0.15 200)" />
-            <stop offset="100%" stopColor="oklch(0.52 0.13 215)" />
-          </radialGradient>
+          <linearGradient id="gemTable" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="oklch(0.99 0.03 200)" />
+            <stop offset="100%" stopColor="oklch(0.86 0.12 202)" />
+          </linearGradient>
+          <linearGradient id="gemCrownL" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="oklch(0.91 0.09 205)" />
+            <stop offset="100%" stopColor="oklch(0.64 0.14 216)" />
+          </linearGradient>
+          <linearGradient id="gemCrownR" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="oklch(0.94 0.08 200)" />
+            <stop offset="100%" stopColor="oklch(0.70 0.14 212)" />
+          </linearGradient>
+          <linearGradient id="gemPavL" x1="0" y1="0" x2="0.6" y2="1">
+            <stop offset="0%" stopColor="oklch(0.74 0.13 210)" />
+            <stop offset="100%" stopColor="oklch(0.40 0.11 226)" />
+          </linearGradient>
+          <linearGradient id="gemPavC" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="oklch(0.92 0.10 200)" />
+            <stop offset="100%" stopColor="oklch(0.50 0.13 218)" />
+          </linearGradient>
+          <linearGradient id="gemPavR" x1="1" y1="0" x2="0.4" y2="1">
+            <stop offset="0%" stopColor="oklch(0.79 0.12 208)" />
+            <stop offset="100%" stopColor="oklch(0.45 0.12 223)" />
+          </linearGradient>
+          <clipPath id="gemClip"><path d={GEM_OUTLINE} /></clipPath>
         </defs>
-        <path d={PATH} fill="url(#heart3d)" />
-        {/* specular highlight on the left lobe */}
-        <ellipse cx="8" cy="8" rx="2.6" ry="1.8" fill="#fff" opacity="0.55" transform="rotate(-32 8 8)" />
-      </m.svg>
+
+        {/* crown facets */}
+        <polygon points="5,17 14,5 14,17" fill="url(#gemCrownL)" />
+        <polygon points="14,5 34,5 34,17 14,17" fill="url(#gemTable)" />
+        <polygon points="34,5 43,17 34,17" fill="url(#gemCrownR)" />
+        {/* pavilion facets */}
+        <polygon points="5,17 14,17 24,43" fill="url(#gemPavL)" />
+        <polygon points="14,17 34,17 24,43" fill="url(#gemPavC)" />
+        <polygon points="34,17 43,17 24,43" fill="url(#gemPavR)" />
+
+        {/* facet edges catch the light */}
+        <g stroke="oklch(0.99 0.02 200 / 0.45)" strokeWidth="0.5" fill="none">
+          <path d="M5 17 H43" />
+          <path d="M14 5 V17" />
+          <path d="M34 5 V17" />
+          <path d="M14 17 L24 43" />
+          <path d="M34 17 L24 43" />
+        </g>
+
+        {/* girdle + outline */}
+        <path d={GEM_OUTLINE} fill="none" stroke="oklch(0.99 0.02 200 / 0.85)" strokeWidth="0.8" strokeLinejoin="round" />
+
+        {/* specular glint sweeping across the stone */}
+        {!reduced && (
+          <g clipPath="url(#gemClip)">
+            <m.rect
+              y="-4" width="9" height="56" fill="oklch(1 0 0 / 0.6)"
+              style={{ filter: 'blur(1.5px)' }}
+              transform="rotate(20 24 24)"
+              animate={{ x: [-26, 54] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 3.2, ease: 'easeInOut' }}
+            />
+          </g>
+        )}
+      </svg>
     </div>
   )
 }
@@ -121,19 +164,23 @@ const Footer = (): JSX.Element => {
         <m.div {...fade}>
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">A concept prototype</p>
           <div className="mx-auto mt-8 flex justify-center">
-            <Heartbeat />
+            <Gem />
           </div>
         </m.div>
 
         <LaserLine start={inView} reduced={reduced} onDone={() => { setWritten(true) }} />
 
         <m.div {...fade}>
-          <div className="mx-auto mt-10 flex items-center justify-center gap-3">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            <span className="h-px w-12 bg-hairline-soft" />
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+          {/* Branded sign-off: the same orbit mark from the navbar, so the page
+              closes signed rather than trailing off into a plain divider. */}
+          <div className="mx-auto mt-12 flex items-center justify-center gap-2.5 font-display text-[1rem] font-semibold tracking-[0.24em] text-ink/85">
+            <span className="grid h-5 w-5 place-items-center rounded-full border border-accent/50">
+              <span className="block h-1 w-1 rounded-full bg-accent" />
+            </span>
+            <span style={{ textShadow: '0 0 12px oklch(0.8 0.1 205 / 0.4)' }}>AETHER</span>
+            <span className="ml-0.5 font-sans text-[0.66rem] font-normal uppercase tracking-[0.3em] text-faint">Aura</span>
           </div>
-          <p className="mt-10 font-sans text-[0.8rem] text-faint">
+          <p className="mt-9 font-sans text-[0.8rem] text-faint">
             © 2026 AETHER · Aura. All renders and footage are AI-generated.
           </p>
           <p className="mt-2 font-mono text-[0.7rem] text-faint/60">{__COMMIT_SHA__}</p>
