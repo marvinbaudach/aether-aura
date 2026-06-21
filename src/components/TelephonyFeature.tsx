@@ -76,18 +76,18 @@ const CallWidget = (): JSX.Element => {
 const TelephonyFeature = (): JSX.Element => {
   return (
     <section id="connect" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-2xl text-center">
         <Reveal className="relative">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">On the go</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Leave the phone. Keep the call.
           </h2>
-          <p className="mt-6 max-w-[46ch] font-sans text-[1.08rem] text-muted">
+          <p className="mx-auto mt-6 max-w-[46ch] font-sans text-[1.08rem] text-muted">
             A built-in cellular radio and a precision microphone array let you
             take calls, dictate messages and stream — all from your wrist, with
             your phone three rooms away.
           </p>
-          <div className="mt-9 max-w-[360px]">
+          <div className="mx-auto mt-9 max-w-[360px]">
             <CallWidget />
           </div>
         </Reveal>

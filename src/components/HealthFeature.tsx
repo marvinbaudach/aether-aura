@@ -87,19 +87,19 @@ const Rings = (): JSX.Element => {
 const HealthFeature = (): JSX.Element => {
   return (
     <section id="health" className="relative bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,12vh,10rem)]">
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-2xl text-center">
         <Reveal>
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Health, continuous</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Know your body by heart.
           </h2>
-          <p className="mt-6 max-w-[46ch] font-sans text-[1.08rem] text-muted">
+          <p className="mx-auto mt-6 max-w-[46ch] font-sans text-[1.08rem] text-muted">
             An optical emitter pulses a single cyan beam through the skin to read
             your heartbeat ninety times a second — then sleeps between readings to
             protect the cell. No contacts ever touch your wrist.
           </p>
 
-          <div className="mt-10 grid grid-cols-[auto_1fr] items-center gap-7 rounded-3xl border border-hairline-soft bg-bg-soft p-7">
+          <div className="mx-auto mt-10 grid max-w-md grid-cols-[auto_1fr] items-center gap-7 rounded-3xl border border-hairline-soft bg-bg-soft p-7 text-left">
             <Rings />
             <div>
               <div className="flex items-baseline gap-2">
