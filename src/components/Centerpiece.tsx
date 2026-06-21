@@ -144,7 +144,7 @@ const Centerpiece = (): JSX.Element => {
           <video
             ref={videoRef}
             src={SRC_MOBILE}
-            className="absolute inset-0 z-0 h-full w-full object-cover"
+            className="absolute inset-0 z-0 h-full w-full object-contain"
             muted
             playsInline
             preload="auto"
