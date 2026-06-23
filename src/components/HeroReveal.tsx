@@ -34,8 +34,8 @@ const TILES = [
   { k: 'Hologram', t: 'A display that lifts off the glass.', icon: IconHologram },
 ]
 
-// Signature hero: a full-bleed lifestyle frame holds while the wordmark sits
-// over it. As the user scrolls, the image blurs and scales back, the wordmark
+// Signature hero: a full-bleed product film holds while the wordmark sits over
+// it. As the user scrolls, the film blurs and scales back, the wordmark
 // recedes, and a cluster of feature tiles rises into focus. Apple-style
 // "background defocus → content reveal" built on a single sticky scroll track.
 const HeroReveal = (): JSX.Element => {
@@ -62,34 +62,34 @@ const HeroReveal = (): JSX.Element => {
   const tilesOpacity = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [0, 0, 1, 1])
   const tilesY = useTransform(scrollYProgress, [0, 0.22, 0.42, 1], [50, 50, 0, 0])
   const cueOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [1, 0, 0])
-  // The cool duotone wash only comes in as the photo defocuses — at the start
-  // the sharp titanium watch must own the frame in its true colour.
-  const washOpacity = useTransform(scrollYProgress, [0, 0.42, 1], [0, 0.9, 0.9])
 
   return (
     <section id="top" ref={ref} className="relative h-[185vh] snap-start">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
-        {/* Defocusing lifestyle backdrop */}
+      {/* Near-black base matched to the video's own dark studio edges, so the
+          centered watch clip blends seamlessly into a full-width field with no
+          lighter side bars. A soft cyan glow spans the whole width for the
+          living brand atmosphere. */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[oklch(0.07_0.014_245)]">
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0 bg-[radial-gradient(85%_60%_at_50%_38%,oklch(0.32_0.08_212/0.55),transparent_75%)]"
+        />
+        {/* Product film: the watch turns through a slow, seamless 360° loop. It
+            autoplays on its own (no scroll needed) and only blurs / scales back
+            as the visitor scrolls into the tiles. The clip is already shot on
+            the brand slate-and-cyan palette, so no colour wash is needed. */}
         <m.div style={{ scale, filter }} className="absolute inset-0 z-0 will-change-transform">
-          <picture>
-            <source
-              type="image/webp"
-              srcSet="assets/aura_lifestyle_1000.webp 1000w, assets/aura_lifestyle_1600.webp 1600w, assets/aura_lifestyle_2400.webp 2400w"
-              sizes="100vw"
-            />
-            <img
-              src="assets/aura_lifestyle_1600.jpg"
-              alt="A person wearing the AETHER Aura, its cyan display glowing"
-              className="h-full w-full object-cover"
-              fetchPriority="high"
-            />
-          </picture>
-          {/* Duotone wash: recolour the warm lifestyle photo into the cool brand
-              palette so the defocused backdrop reads as cyan atmosphere rather
-              than a muddy skin-toned blur. Fades in with scroll (see washOpacity)
-              so the sharp hero watch keeps its true colour. */}
-          <m.div aria-hidden style={{ opacity: washOpacity }} className="absolute inset-0 bg-[oklch(0.55_0.14_212)] mix-blend-color" />
-          <m.div aria-hidden style={{ opacity: washOpacity }} className="absolute inset-0 bg-[radial-gradient(75%_70%_at_50%_38%,oklch(0.5_0.13_210/0.35),transparent_72%)]" />
+          <video
+            src="assets/aura_hero360_wide16x9.mp4"
+            className="h-full w-full object-cover"
+            poster="assets/hero360/hero_wide16x9_poster.webp"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-label="The AETHER Aura titanium smartwatch turning slowly through a full rotation"
+          />
         </m.div>
 
         {/* Dimming + vignette so text stays legible at every scroll position */}

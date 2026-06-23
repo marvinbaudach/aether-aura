@@ -22,16 +22,9 @@
 html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
 
-/* Section snapping. Each content section is a full-viewport panel (see the
-   `min-h-svh` panels in the components); proximity snapping lets a flick of the
-   wheel settle the scroll on the nearest section start, so two sections never
-   share the screen — yet tall scenes (the cinematic Hero/Centerpiece and the
-   spec list) stay free to scroll because proximity only engages near a snap
-   point. Desktop + motion-allowed only: mandatory-style snapping fights touch
-   momentum, and reduced-motion users keep plain scrolling. */
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
-  html { scroll-snap-type: y proximity; }
-}
+/* Section snapping was removed — the proximity snap felt abrupt while scrolling
+   through the cinematic sections, so the page now scrolls freely. The leftover
+   `snap-start` utility classes on sections are inert without a snap container. */
 
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
