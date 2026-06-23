@@ -90,27 +90,21 @@ const HoloFeature = (): JSX.Element => {
       <div className="relative mx-auto grid max-w-shell items-center gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
         <m.div style={{ y }}>
           <Reveal>
-            <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">The frontier</p>
+            <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Holographic calls</p>
             <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02]">
               <span
                 className="text-gradient-accent"
                 style={reduced ? undefined : { backgroundSize: '200% auto', animation: 'holo-pan 6s linear infinite' }}
               >
-                A display
+                Face to face
               </span>
               <br />
-              that lifts off the glass.
+              off your wrist.
             </h2>
-            <p className="mt-6 max-w-[44ch] font-sans text-[1.08rem] text-muted">
-              Above the sapphire face, a volumetric layer projects your vitals,
-              alerts and faces into the air — readable at a glance, without ever
-              raising your wrist. This is where elegance meets the future.
+            <p className="mt-6 max-w-[40ch] font-sans text-[1.08rem] text-muted">
+              The Aura lifts your caller into the air as a life-size hologram.
+              Telephony you look in the eye.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              {['Volumetric UI', 'Depth-true', 'Glance-readable'].map((t) => (
-                <span key={t} className="rounded-full border border-accent/40 bg-accent/10 px-4 py-1.5 font-sans text-[0.84rem] text-ink">{t}</span>
-              ))}
-            </div>
           </Reveal>
         </m.div>
 
@@ -136,7 +130,7 @@ const HoloFeature = (): JSX.Element => {
               ) : (
                 <picture>
                   <source type="image/webp" srcSet="assets/aura_holo_film_poster.webp" />
-                  <img src="assets/aura_holo_film_poster.jpg" alt="The Aura projecting a holographic display" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
+                  <img src="assets/aura_holo_film_poster.jpg" alt="The Aura projecting a holographic video call of a person above its face" className="absolute inset-0 h-full w-full object-cover" loading="lazy" decoding="async" />
                 </picture>
               )}
             </div>

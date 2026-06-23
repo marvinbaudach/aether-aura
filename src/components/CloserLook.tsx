@@ -13,11 +13,9 @@ interface Feature {
 }
 
 const FEATURES: Feature[] = [
-  { key: 'shell', label: 'Machined shell', body: 'One billet of Grade-5 titanium, milled into a seamless, sealed monocoque.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
-  { key: 'profile', label: 'Slim profile', body: 'A knife-clean edge that vanishes under a cuff — full sensor stack and all.', webp: 'assets/aura_profile_1200.webp', jpg: 'assets/aura_profile_1000.jpg', alt: 'Side profile of the titanium Aura' },
-  { key: 'sapphire', label: 'Level sapphire', body: 'Sapphire set flush to four microns — light leaves the display without a shadow.', webp: 'assets/aura_cl_sapphire_1200.webp', jpg: 'assets/aura_cl_sapphire_1000.jpg', alt: 'Macro of the flush sapphire crystal on the Aura' },
-  { key: 'sensor', label: 'Optical back', body: 'Cyan and emerald lasers read heart rate and glucose through the skin — no contact pads.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
-  { key: 'core', label: 'Nuclear core', body: 'A sliver of radioisotope fuel powers the Aura for decades — no port, no cable, no charge.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
+  { key: 'shell', label: 'Machined shell', body: 'One billet of titanium, milled into a sealed monocoque.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
+  { key: 'sensor', label: 'Optical back', body: 'Lasers read heart rate and glucose straight through the skin.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
+  { key: 'core', label: 'Nuclear core', body: 'A sliver of radioisotope fuel runs the Aura for decades. No cable.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
 ]
 
 // Sticky product viewer: a pinned render on one side, an accordion of design
@@ -28,20 +26,20 @@ const CloserLook = (): JSX.Element => {
   const img = FEATURES[active] ?? FEATURES[0]!
 
   return (
-    <section id="design" className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+    <section id="design" className="relative flex min-h-svh snap-start flex-col justify-center px-[max(1.25rem,6vw)] py-[clamp(3rem,6vh,4.5rem)]">
       <div className="mx-auto w-full max-w-shell">
-        <Reveal className="mb-12">
+        <Reveal className="mb-8">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Take a closer look</p>
           <h2 className="mt-4 font-display text-[clamp(2rem,4.6vw,3.6rem)] font-medium leading-[1.04] text-gradient">
             Design you can feel before you read a spec.
           </h2>
         </Reveal>
 
-        <div className="grid gap-10 md:grid-cols-2 md:gap-16">
+        <div className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
           {/* Sticky product */}
-          <div className="mx-auto w-full max-w-sm md:max-w-none md:sticky md:top-24 md:h-fit">
+          <div className="mx-auto w-full max-w-[18rem] md:sticky md:top-24 md:h-fit md:max-w-sm">
             <div className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-[radial-gradient(120%_120%_at_50%_0%,oklch(0.22_0.016_242)_0%,oklch(0.145_0.014_245)_70%)]">
-              <div className="relative flex aspect-square items-center justify-center py-8 md:aspect-[4/5] md:py-10">
+              <div className="relative flex aspect-square items-center justify-center py-5">
                 <AnimatePresence mode="wait">
                   <m.picture
                     key={img.key}
@@ -52,7 +50,7 @@ const CloserLook = (): JSX.Element => {
                     className="relative h-full w-full"
                   >
                     <source type="image/webp" srcSet={img.webp} />
-                    <img src={img.jpg} alt={img.alt} className="h-full w-full object-contain p-6" loading="lazy" decoding="async" />
+                    <img src={img.jpg} alt={img.alt} className="h-full w-full object-contain p-4" loading="lazy" decoding="async" />
                   </m.picture>
                 </AnimatePresence>
                 <div className="pointer-events-none absolute left-1/2 top-[12%] h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
@@ -92,7 +90,7 @@ const CloserLook = (): JSX.Element => {
                   <button
                     onClick={() => { setActive(idx); }}
                     aria-expanded={open}
-                    className="flex w-full items-center gap-4 py-6 pl-5 text-left"
+                    className="flex w-full items-center gap-4 py-4 pl-5 text-left"
                   >
                     <span className={`font-mono text-[0.8rem] tabular-nums transition-colors ${open ? 'text-accent' : 'text-faint'}`}>
                       {`0${String(idx + 1)}`}
@@ -113,7 +111,7 @@ const CloserLook = (): JSX.Element => {
                         transition={{ duration: 0.4, ease }}
                         className="overflow-hidden"
                       >
-                        <p className="pb-7 pl-5 pr-8 font-sans text-[1.05rem] leading-relaxed text-muted">{f.body}</p>
+                        <p className="pb-5 pl-5 pr-8 font-sans text-[1.05rem] leading-relaxed text-muted">{f.body}</p>
                       </m.div>
                     )}
                   </AnimatePresence>

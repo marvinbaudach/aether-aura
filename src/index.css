@@ -31,7 +31,16 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 body {
-  background: var(--bg);
+  /* Pure flat black reads dead, so the base slate carries a couple of very
+     soft, diffuse cyan light pools (studio-lit feel). Attachment:fixed keeps
+     them anchored to the viewport so each screen catches a gentle, asymmetric
+     glow instead of an even void. Kept low-alpha so text contrast is untouched. */
+  background:
+    radial-gradient(48% 42% at 14% 8%,  oklch(0.36 0.08 210 / 0.11), transparent 72%),
+    radial-gradient(46% 40% at 88% 60%, oklch(0.34 0.08 200 / 0.09), transparent 72%),
+    radial-gradient(60% 45% at 50% 108%, oklch(0.30 0.07 225 / 0.08), transparent 70%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: Inter, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

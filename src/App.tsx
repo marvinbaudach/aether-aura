@@ -67,7 +67,7 @@ const App = (): JSX.Element => {
       <MotionConfig reducedMotion="user">
         <AnimatePresence>{!ready && <Preloader key="preloader" />}</AnimatePresence>
         <Topbar />
-        <main className="bg-bg text-ink">
+        <main className="text-ink">
           <HeroReveal />
           <Highlights />
           <Centerpiece />

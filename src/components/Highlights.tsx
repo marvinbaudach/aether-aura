@@ -31,20 +31,6 @@ const SLIDES: Slide[] = [
     art: 'aura_hl_calls',
   },
   {
-    key: 'hologram',
-    label: 'Hologram',
-    title: 'A display that lifts off.',
-    body: 'Volumetric projection raises your metrics into the air above the sapphire face.',
-    art: 'aura_hl_hologram',
-  },
-  {
-    key: 'titanium',
-    label: 'Titanium',
-    title: 'Flush to four microns.',
-    body: 'The sapphire lens sits perfectly level with the machined titanium — nothing casts a shadow.',
-    art: 'aura_hl_titanium',
-  },
-  {
     key: 'dive',
     label: 'Dive',
     title: 'Down to 500 metres.',
