@@ -3,7 +3,6 @@ import { AnimatePresence, LazyMotion, MotionConfig, domAnimation } from 'framer-
 import Lenis from 'lenis'
 import { useMediaQuery } from './lib/useMediaQuery'
 import Preloader from './components/Preloader'
-import Topbar from './components/Topbar'
 import HeroReveal from './components/HeroReveal'
 import Highlights from './components/Highlights'
 import Centerpiece from './components/Centerpiece'
@@ -66,7 +65,6 @@ const App = (): JSX.Element => {
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">
         <AnimatePresence>{!ready && <Preloader key="preloader" />}</AnimatePresence>
-        <Topbar />
         <main className="text-ink">
           <HeroReveal />
           <Highlights />

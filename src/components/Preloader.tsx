@@ -1,65 +1,37 @@
-import { useLayoutEffect, useRef, useState } from 'react'
 import type { JSX } from 'react'
 import { m, useReducedMotion } from 'framer-motion'
 import { ease } from '../anim'
-
-interface Flight {
-  x: number
-  y: number
-  scale: number
-}
 
 // Three particles evenly spaced around the ring.
 const ORBIT = [0, 120, 240]
 
 // Branded loading veil. The mark breathes — a sweeping arc, an orbit of
-// particles and a pulsing core. On exit the mark flies to the Topbar's logo
-// (measured at mount) and the veil dissolves, handing the loader off into the
-// page's own brand mark. Reduced-motion users get a plain cross-fade.
+// particles and a pulsing core. On exit nothing flies off-screen: the wordmark
+// sits dead-centre, exactly where the hero's own AETHER title lives, so it
+// grows and dissolves straight into the page beneath as the veil lifts. No
+// persistent header to hand off to — the loader resolves into the hero itself.
+// Reduced-motion users get a plain cross-fade.
 const Preloader = (): JSX.Element => {
   const reduced = useReducedMotion() ?? false
-  const markRef = useRef<HTMLDivElement>(null)
-  const wordRef = useRef<HTMLParagraphElement>(null)
-  const [flight, setFlight] = useState<{ mark: Flight; word: Flight }>({
-    mark: { x: 0, y: 0, scale: 0.375 },
-    word: { x: 0, y: 0, scale: 0.5 },
-  })
 
-  useLayoutEffect(() => {
-    // Centre-to-centre delta + width ratio from a loader element to its landing
-    // spot in the Topbar.
-    const measure = (el: HTMLElement | null, targetId: string): Flight | null => {
-      const target = document.getElementById(targetId)
-      if (!el || !target) return null
-      const a = el.getBoundingClientRect()
-      const b = target.getBoundingClientRect()
-      return {
-        x: b.left + b.width / 2 - (a.left + a.width / 2),
-        y: b.top + b.height / 2 - (a.top + a.height / 2),
-        scale: b.width / a.width,
-      }
-    }
-    const mark = measure(markRef.current, 'brand-mark')
-    const word = measure(wordRef.current, 'brand-word')
-    if (mark && word) setFlight({ mark, word })
-  }, [])
-
-  const flyTransition = { duration: 0.85, ease, opacity: { delay: 0.6, duration: 0.25 } }
+  const handoff = { duration: 0.85, ease, opacity: { delay: 0.45, duration: 0.4 } }
   const markExit = reduced
     ? { opacity: 0, transition: { duration: 0.4 } }
-    : { x: flight.mark.x, y: flight.mark.y, scale: flight.mark.scale, opacity: 0, transition: flyTransition }
+    : { scale: 1.35, opacity: 0, transition: handoff }
+  // Grows toward the hero's far larger wordmark so the eye reads it as the same
+  // mark settling into place rather than a new title appearing.
   const wordExit = reduced
     ? { opacity: 0, transition: { duration: 0.4 } }
-    : { x: flight.word.x, y: flight.word.y, scale: flight.word.scale, opacity: 0, transition: flyTransition }
+    : { scale: 1.8, opacity: 0, transition: handoff }
 
   return (
     <m.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: reduced ? 0.4 : 0.5, delay: reduced ? 0 : 0.6 } }}
+      exit={{ opacity: 0, transition: { duration: reduced ? 0.4 : 0.5, delay: reduced ? 0 : 0.7 } }}
       className="fixed inset-0 z-[60] grid place-items-center overflow-hidden bg-bg"
     >
       <div className="relative flex flex-col items-center">
-        <m.div ref={markRef} exit={markExit} className="relative grid h-16 w-16 place-items-center">
+        <m.div exit={markExit} className="relative grid h-16 w-16 place-items-center">
           {/* faint static ring */}
           <span className="absolute inset-0 rounded-full border border-accent/25" />
 
@@ -96,7 +68,6 @@ const Preloader = (): JSX.Element => {
         </m.div>
 
         <m.p
-          ref={wordRef}
           exit={wordExit}
           className="mt-7 font-display text-[clamp(1.4rem,4vw,2rem)] font-medium tracking-[0.42em] text-ink"
           style={{ textShadow: '0 0 18px oklch(0.95 0.02 230 / 0.9), 0 0 45px oklch(0.85 0.08 205 / 0.7), 0 0 90px oklch(0.7 0.12 205 / 0.55)' }}
