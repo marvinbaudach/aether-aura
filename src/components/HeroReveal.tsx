@@ -1,4 +1,4 @@
-import { useRef, type JSX } from 'react'
+import { useEffect, useRef, type JSX } from 'react'
 import { m, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
 import { ease } from '../anim'
 import GlassTile from './GlassTile'
@@ -40,7 +40,34 @@ const TILES = [
 // "background defocus → content reveal" built on a single sticky scroll track.
 const HeroReveal = (): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
+
+  // The opaque preloader covers this clip while it would normally autoplay, and
+  // Chrome skips/re-pauses muted autoplay for a video it treats as not visible.
+  // Nothing resumes it once the loader lifts, so the hero would sit on its
+  // poster frame. Nudge play() ourselves and keep re-checking until the clip is
+  // actually rolling (long enough to outlast the loader), then stop.
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+    let timer = 0
+    let tries = 0
+    const ensurePlaying = () => {
+      void v.play().catch(() => {})
+      // ~7s of retries comfortably outlasts the preloader hold (2.2s) plus its
+      // fly-out exit animation, after which the clip is fully visible and play()
+      // sticks. Stops as soon as the video is actually rolling.
+      if (tries < 20) {
+        tries += 1
+        timer = window.setTimeout(() => {
+          if (v.paused) ensurePlaying()
+        }, 350)
+      }
+    }
+    ensurePlaying()
+    return () => window.clearTimeout(timer)
+  }, [])
 
   // Each scroll value carries an explicit terminal keyframe at progress 1 so it
   // holds its end state across the rest of the track. Without it, framer-motion
@@ -80,6 +107,7 @@ const HeroReveal = (): JSX.Element => {
             the brand slate-and-cyan palette, so no colour wash is needed. */}
         <m.div style={{ scale, filter }} className="absolute inset-0 z-0 will-change-transform">
           <video
+            ref={videoRef}
             src="assets/aura_hero360_wide16x9.mp4"
             className="h-full w-full object-cover"
             poster="assets/hero360/hero_wide16x9_poster.webp"
