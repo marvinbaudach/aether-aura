@@ -106,7 +106,7 @@ const Centerpiece = (): JSX.Element => {
     const first = frames[0]
     if (first) {
       if (first.complete) draw(0)
-      else first.onload = () => draw(0)
+      else first.onload = () => { draw(0); }
     }
     raf = requestAnimationFrame(tick)
 
@@ -128,7 +128,7 @@ const Centerpiece = (): JSX.Element => {
     video.loop = true
     const play = () => { void video.play().catch(() => undefined) }
     const io = new IntersectionObserver(
-      (entries) => { entries.forEach((e) => { e.isIntersecting ? play() : video.pause() }) },
+      (entries) => { entries.forEach((e) => { if (e.isIntersecting) play(); else video.pause(); }) },
       { threshold: 0.2 },
     )
     io.observe(section)

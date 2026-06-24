@@ -12,7 +12,9 @@ interface Feature {
   alt: string
 }
 
-const FEATURES: Feature[] = [
+// Non-empty tuple so FEATURES[0] is a guaranteed fallback under
+// noUncheckedIndexedAccess — no non-null assertion needed below.
+const FEATURES: [Feature, ...Feature[]] = [
   { key: 'shell', label: 'Machined shell', body: 'One billet of titanium, milled into a sealed monocoque.', webp: 'assets/aura_hero_1200.webp', jpg: 'assets/aura_hero_1000.jpg', alt: 'Three-quarter view of the titanium Aura' },
   { key: 'sensor', label: 'Optical back', body: 'Lasers read heart rate and glucose straight through the skin.', webp: 'assets/aura_cl_sensor_1200.webp', jpg: 'assets/aura_cl_sensor_1000.jpg', alt: 'The Aura caseback with its laser health-sensor array' },
   { key: 'core', label: 'Nuclear core', body: 'A sliver of radioisotope fuel runs the Aura for decades. No cable.', webp: 'assets/aura_cl_core_1200.webp', jpg: 'assets/aura_cl_core_1000.jpg', alt: 'Cutaway of the Aura revealing its glowing radioisotope fuel cell' },
@@ -23,7 +25,7 @@ const FEATURES: Feature[] = [
 // the same physical watch, shown from a consistent set of angles.
 const CloserLook = (): JSX.Element => {
   const [active, setActive] = useState(0)
-  const img = FEATURES[active] ?? FEATURES[0]!
+  const img = FEATURES[active] ?? FEATURES[0]
 
   return (
     <section id="design" className="relative flex min-h-svh snap-start flex-col justify-center px-[max(1.25rem,6vw)] py-[clamp(3rem,6vh,4.5rem)]">

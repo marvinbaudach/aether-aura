@@ -54,7 +54,7 @@ const HeroReveal = (): JSX.Element => {
     let timer = 0
     let tries = 0
     const ensurePlaying = () => {
-      void v.play().catch(() => {})
+      void v.play().catch(() => undefined)
       // ~7s of retries comfortably outlasts the preloader hold (2.2s) plus its
       // fly-out exit animation, after which the clip is fully visible and play()
       // sticks. Stops as soon as the video is actually rolling.
@@ -66,7 +66,7 @@ const HeroReveal = (): JSX.Element => {
       }
     }
     ensurePlaying()
-    return () => window.clearTimeout(timer)
+    return () => { window.clearTimeout(timer); }
   }, [])
 
   // Each scroll value carries an explicit terminal keyframe at progress 1 so it
