@@ -1,8 +1,13 @@
-import { useRef, useState, type JSX } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type JSX } from 'react'
 import type { MouseEvent } from 'react'
 import { m } from 'framer-motion'
-import AuroraGlow from './AuroraGlow'
 import Reveal from './Reveal'
+
+// The aurora is a WebGL effect (ogl) that only lives in this below-the-fold
+// section. Split it into its own chunk and mount it only once the section nears
+// the viewport, so ogl never weighs on the initial load and most visitors who
+// don't scroll this far never download it at all.
+const AuroraGlow = lazy(() => import('./AuroraGlow'))
 
 // The reserve control, themed as an "ignition": a machined titanium pill with a
 // single bright arc of light slowly circling its rim, a leading "first light"
@@ -80,9 +85,34 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
 }
 
 const CTA = (): JSX.Element => {
+  const sectionRef = useRef<HTMLElement>(null)
+  const [showGlow, setShowGlow] = useState(false)
+
+  // Load + mount the aurora a little before the section scrolls into view, so the
+  // ogl chunk has time to fetch and the effect is ready when the user arrives.
+  useEffect(() => {
+    const el = sectionRef.current
+    if (!el) return
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShowGlow(true)
+          io.disconnect()
+        }
+      },
+      { rootMargin: '400px 0px' },
+    )
+    io.observe(el)
+    return () => { io.disconnect(); }
+  }, [])
+
   return (
-    <section id="reserve" className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">
-      <AuroraGlow />
+    <section ref={sectionRef} id="reserve" className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">
+      {showGlow && (
+        <Suspense fallback={null}>
+          <AuroraGlow />
+        </Suspense>
+      )}
       <Reveal className="relative">
         <p className="font-sans text-[0.78rem] uppercase tracking-[0.42em] text-muted">First run open</p>
         <h2 className="mx-auto mt-6 max-w-[16ch] font-display text-[clamp(2.2rem,6vw,5rem)] font-medium leading-[1.04] text-gradient">
