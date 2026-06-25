@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type JSX } from 'react'
+import { useEffect, useRef, type JSX } from 'react'
 import { m, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
+import { useNearViewport } from '../lib/useNearViewport'
 import Reveal from './Reveal'
 
 const SRC_DESKTOP = 'assets/aura_holo_film.mp4'
@@ -11,31 +12,14 @@ const SRC_MOBILE = 'assets/aura_holo_film_720.mp4'
 // never scroll this far), then autoplays muted and loops. A gentle parallax
 // lifts the copy as it passes.
 const HoloFeature = (): JSX.Element => {
-  const sectionRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const [load, setLoad] = useState(false)
+  // Defer the (heavy) clip download until the section nears the viewport.
+  const [sectionRef, load] = useNearViewport<HTMLDivElement>('500px 0px')
 
   const reduced = useReducedMotion()
   const desktop = useMediaQuery('(min-width: 768px)')
   // `media` on a <video><source> is ignored by browsers; pick the file in JS.
   const videoSrc = desktop ? SRC_DESKTOP : SRC_MOBILE
-
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      (entries) =>
-        { entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setLoad(true)
-            io.disconnect()
-          }
-        }); },
-      { rootMargin: '500px 0px' },
-    )
-    io.observe(el)
-    return () => { io.disconnect(); }
-  }, [])
 
   useEffect(() => {
     const v = videoRef.current
@@ -72,7 +56,7 @@ const HoloFeature = (): JSX.Element => {
       io.disconnect()
       window.clearInterval(watchdog)
     }
-  }, [load])
+  }, [load, sectionRef])
 
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], ['6%', '-6%'])

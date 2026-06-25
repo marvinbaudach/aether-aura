@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect, useRef, useState, type JSX } from 'react'
+import { lazy, Suspense, useRef, useState, type JSX } from 'react'
 import type { MouseEvent } from 'react'
-import { m } from 'framer-motion'
+import { m, useMotionTemplate, useMotionValue } from 'framer-motion'
+import { useNearViewport } from '../lib/useNearViewport'
 import Reveal from './Reveal'
 
 // The aurora is a WebGL effect (ogl) that only lives in this below-the-fold
@@ -17,14 +18,21 @@ const AuroraGlow = lazy(() => import('./AuroraGlow'))
 // default glass button.
 const SheenButton = ({ children }: { children: string }): JSX.Element => {
   const ref = useRef<HTMLButtonElement>(null)
-  const [pos, setPos] = useState<{ x: number; y: number }>({ x: 50, y: 50 })
   const [lit, setLit] = useState(false)
+
+  // Cursor-tracked sheen position. Held as motion values, not state, so the
+  // pointer drives a CSS variable directly each frame instead of re-rendering
+  // the whole button on every mousemove (the same approach as GlassTile).
+  const mx = useMotionValue(50)
+  const my = useMotionValue(50)
+  const sheen = useMotionTemplate`radial-gradient(140px circle at ${mx}% ${my}%, oklch(0.99 0.02 200 / 0.4), transparent 60%)`
 
   const onMove = (e: MouseEvent<HTMLButtonElement>) => {
     const el = ref.current
     if (!el) return
     const r = el.getBoundingClientRect()
-    setPos({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 })
+    mx.set(((e.clientX - r.left) / r.width) * 100)
+    my.set(((e.clientY - r.top) / r.height) * 100)
   }
 
   return (
@@ -47,13 +55,10 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
           className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-[linear-gradient(100deg,oklch(0.86_0.13_200),oklch(0.7_0.15_215))] transition-transform duration-[450ms] ease-out group-hover:scale-x-100"
         />
         {/* Cursor-tracked specular sheen. */}
-        <span
+        <m.span
           aria-hidden
           className="pointer-events-none absolute inset-0 transition-opacity duration-300"
-          style={{
-            opacity: lit ? 1 : 0,
-            background: `radial-gradient(140px circle at ${String(pos.x)}% ${String(pos.y)}%, oklch(0.99 0.02 200 / 0.4), transparent 60%)`,
-          }}
+          style={{ opacity: lit ? 1 : 0, background: sheen }}
         />
         {/* One-shot rim glow on scroll-in to draw the eye, then settles. */}
         <m.span
@@ -85,26 +90,9 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
 }
 
 const CTA = (): JSX.Element => {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [showGlow, setShowGlow] = useState(false)
-
   // Load + mount the aurora a little before the section scrolls into view, so the
   // ogl chunk has time to fetch and the effect is ready when the user arrives.
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          setShowGlow(true)
-          io.disconnect()
-        }
-      },
-      { rootMargin: '400px 0px' },
-    )
-    io.observe(el)
-    return () => { io.disconnect(); }
-  }, [])
+  const [sectionRef, showGlow] = useNearViewport<HTMLElement>('400px 0px')
 
   return (
     <section ref={sectionRef} id="reserve" className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">

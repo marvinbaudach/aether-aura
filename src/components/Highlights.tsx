@@ -50,8 +50,12 @@ const Highlights = (): JSX.Element | null => {
   const reduced = useReducedMotion() ?? false
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
-  // Always auto-advances; only reduced-motion users get a static frame.
-  const autoplay = !reduced
+  // WCAG 2.2.2 (Pause, Stop, Hide): auto-advancing content must be pausable.
+  // Reduced-motion users never start moving; everyone else gets an explicit
+  // toggle, and pointer hover / keyboard focus pause it while they read.
+  const [paused, setPaused] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const autoplay = !reduced && !paused && !hovered
 
   useEffect(() => {
     if (!autoplay) return
@@ -93,7 +97,15 @@ const Highlights = (): JSX.Element | null => {
 
   return (
     <section className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
-      <div className="mx-auto w-full max-w-shell">
+      {/* Hover or keyboard focus anywhere in the gallery pauses the rotation so
+          it never slides out from under someone reading or interacting. */}
+      <div
+        className="mx-auto w-full max-w-shell"
+        onMouseEnter={() => { setHovered(true); }}
+        onMouseLeave={() => { setHovered(false); }}
+        onFocusCapture={() => { setHovered(true); }}
+        onBlurCapture={() => { setHovered(false); }}
+      >
         <Reveal className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
             Get the highlights.
@@ -143,6 +155,24 @@ const Highlights = (): JSX.Element | null => {
                 )
               })}
             </div>
+
+            {/* WCAG 2.2.2 pause control. Hidden for reduced-motion users, who
+                never see motion to pause in the first place. */}
+            {!reduced && (
+              <button
+                type="button"
+                onClick={() => { setPaused((p) => !p); }}
+                aria-pressed={paused}
+                aria-label={paused ? 'Resume auto-advancing highlights' : 'Pause auto-advancing highlights'}
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-accent/40 hover:text-ink"
+              >
+                {paused ? (
+                  <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4 fill-current"><path d="M8 5v14l11-7z" /></svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4 fill-current"><path d="M6 5h4v14H6zM14 5h4v14h-4z" /></svg>
+                )}
+              </button>
+            )}
           </div>
         </Reveal>
 
