@@ -104,6 +104,7 @@ const HoloFeature = (): JSX.Element => {
                   key={videoSrc}
                   ref={videoRef}
                   src={videoSrc}
+                  aria-hidden
                   className="absolute inset-0 h-full w-full object-cover"
                   muted
                   playsInline

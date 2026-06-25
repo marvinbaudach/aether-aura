@@ -10,7 +10,7 @@
   --bg-lift:  oklch(0.225 0.016 242);
   --ink:      oklch(0.962 0.006 230);  /* crisp silver white */
   --muted:    oklch(0.680 0.016 235);  /* cool grey */
-  --faint:    oklch(0.520 0.018 238);  /* dim label grey */
+  --faint:    oklch(0.600 0.018 238);  /* dim label grey — kept ≥4.5:1 on bg/bg-soft for WCAG 1.4.3 AA */
   --accent:   oklch(0.820 0.140 205);  /* glowing cyan */
   --accent-deep: oklch(0.700 0.150 215);
   --hairline: oklch(0.330 0.013 238);
@@ -49,6 +49,42 @@ body {
 }
 
 ::selection { background: color-mix(in oklab, var(--accent) 30%, transparent); color: var(--ink); }
+
+/* Keyboard focus is otherwise invisible on this dark theme. A bright accent ring
+   on :focus-visible (keyboard / programmatic focus only, never on mouse click)
+   gives every interactive element a clear, high-contrast focus indicator —
+   WCAG 2.4.7. The offset + radius keep it legible over glass and pill shapes. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Skip-to-content link (WCAG 2.4.1, Bypass Blocks). Visually parked off-screen
+   until focused, then it drops into view as the first Tab stop so keyboard and
+   screen-reader users can jump straight past the long cinematic intro. */
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, calc(-100% - 1rem));
+  padding: 0.6rem 1.1rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--accent);
+  background: var(--bg-soft);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+.skip-link:focus {
+  transform: translate(-50%, 0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .skip-link { transition: none; }
+}
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }

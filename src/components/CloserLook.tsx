@@ -90,8 +90,10 @@ const CloserLook = (): JSX.Element => {
                     transition={{ duration: 0.3, ease }}
                   />
                   <button
+                    id={`cl-acc-${f.key}`}
                     onClick={() => { setActive(idx); }}
                     aria-expanded={open}
+                    aria-controls={`cl-panel-${f.key}`}
                     className="flex w-full items-center gap-4 py-4 pl-5 text-left"
                   >
                     <span className={`font-mono text-[0.8rem] tabular-nums transition-colors ${open ? 'text-accent' : 'text-faint'}`}>
@@ -107,6 +109,9 @@ const CloserLook = (): JSX.Element => {
                   <AnimatePresence initial={false}>
                     {open && (
                       <m.div
+                        id={`cl-panel-${f.key}`}
+                        role="region"
+                        aria-labelledby={`cl-acc-${f.key}`}
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}

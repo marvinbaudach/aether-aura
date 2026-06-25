@@ -65,7 +65,10 @@ const App = (): JSX.Element => {
     <LazyMotion features={domAnimation} strict>
       <MotionConfig reducedMotion="user">
         <AnimatePresence>{!ready && <Preloader key="preloader" />}</AnimatePresence>
-        <main className="text-ink">
+        {/* First Tab stop: lets keyboard / screen-reader users skip the long
+            cinematic hero and land on the main content (WCAG 2.4.1). */}
+        <a href="#main-content" className="skip-link">Skip to content</a>
+        <main id="main-content" tabIndex={-1} className="text-ink outline-none">
           <HeroReveal />
           <Highlights />
           <Centerpiece />
