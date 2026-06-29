@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react'
 import { m, useMotionTemplate, useMotionValue } from 'framer-motion'
 import { useNearViewport } from '../lib/useNearViewport'
 import Reveal from './Reveal'
+import ReserveDialog from './ReserveDialog'
 
 // The aurora is a WebGL effect (ogl) that only lives in this below-the-fold
 // section. Split it into its own chunk and mount it only once the section nears
@@ -16,7 +17,7 @@ const AuroraGlow = lazy(() => import('./AuroraGlow'))
 // lights it up (the label and arrow invert to dark for contrast). A cursor-
 // tracked specular sheen rides on top. Built to feel engineered, not like a
 // default glass button.
-const SheenButton = ({ children }: { children: string }): JSX.Element => {
+const SheenButton = ({ children, onClick }: { children: string; onClick?: () => void }): JSX.Element => {
   const ref = useRef<HTMLButtonElement>(null)
   const [lit, setLit] = useState(false)
 
@@ -44,6 +45,7 @@ const SheenButton = ({ children }: { children: string }): JSX.Element => {
 
       <button
         ref={ref}
+        onClick={onClick}
         onMouseMove={onMove}
         onMouseEnter={() => { setLit(true); }}
         onMouseLeave={() => { setLit(false); }}
@@ -93,6 +95,7 @@ const CTA = (): JSX.Element => {
   // Load + mount the aurora a little before the section scrolls into view, so the
   // ogl chunk has time to fetch and the effect is ready when the user arrives.
   const [sectionRef, showGlow] = useNearViewport<HTMLElement>('400px 0px')
+  const [reserveOpen, setReserveOpen] = useState(false)
 
   return (
     <section ref={sectionRef} id="reserve" className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">
@@ -110,9 +113,10 @@ const CTA = (): JSX.Element => {
           Arriving in the year 2120. Reserve yours now.
         </p>
         <div className="mt-12">
-          <SheenButton>Reserve your Aura</SheenButton>
+          <SheenButton onClick={() => { setReserveOpen(true); }}>Reserve your Aura</SheenButton>
         </div>
       </Reveal>
+      <ReserveDialog open={reserveOpen} onClose={() => { setReserveOpen(false); }} />
     </section>
   )
 }

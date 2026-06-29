@@ -131,6 +131,36 @@ const AuroraGlow = (): JSX.Element => {
     window.addEventListener('pointermove', onPointer)
     window.addEventListener('pointerdown', onPointer)
 
+    // Gyroscope parallax. On a phone there's no cursor, so the aurora would sit
+    // still; instead let the device's tilt drive the same eased target. gamma is
+    // the left/right tilt, beta the front/back — mapped to the 0..1 uv space
+    // (Y flipped to match the shader's bottom-left origin), clamped so a small
+    // wrist movement sweeps the light without flinging it to the edges.
+    const clamp01 = (v: number) => Math.min(1, Math.max(0, v))
+    const onOrient = (e: DeviceOrientationEvent) => {
+      if (e.gamma === null || e.beta === null) return
+      target.x = clamp01(0.5 + e.gamma / 45 / 2)
+      target.y = clamp01(1 - (0.5 + (e.beta - 45) / 45 / 2))
+    }
+    // iOS 13+ gates the sensor behind an explicit permission call that must run
+    // from a user gesture; elsewhere the listener just works. Either way this
+    // degrades silently to the pointer-only behaviour if denied/unsupported.
+    interface OrientCtor { requestPermission?: () => Promise<PermissionState> }
+    const Ctor = window.DeviceOrientationEvent as unknown as OrientCtor | undefined
+    let gestureBound = false
+    if (Ctor && typeof Ctor.requestPermission === 'function') {
+      const requestOnce = () => {
+        if (gestureBound) return
+        gestureBound = true
+        void Ctor.requestPermission?.().then((state) => {
+          if (state === 'granted') window.addEventListener('deviceorientation', onOrient)
+        }).catch(() => undefined)
+      }
+      window.addEventListener('pointerdown', requestOnce, { once: true })
+    } else if (Ctor) {
+      window.addEventListener('deviceorientation', onOrient)
+    }
+
     const mesh = new Mesh(gl, { geometry: new Triangle(gl), program })
 
     const resize = () => {
@@ -177,6 +207,7 @@ const AuroraGlow = (): JSX.Element => {
       cancelAnimationFrame(raf)
       window.removeEventListener('pointermove', onPointer)
       window.removeEventListener('pointerdown', onPointer)
+      window.removeEventListener('deviceorientation', onOrient)
       ro.disconnect()
       io.disconnect()
       gl.canvas.remove()

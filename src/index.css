@@ -144,6 +144,42 @@ body {
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee-track { animation: marquee 32s linear infinite; will-change: transform; }
 
+/* Render-skip offscreen sections: the browser drops layout + paint for any
+   section outside the viewport and uses the intrinsic-size hint to keep the
+   scrollbar honest. `auto` remembers the last rendered height, so tall sections
+   self-correct after first paint. Applied only to standard in-flow sections —
+   never the sticky / scroll-scrubbed ones, where size containment fights the
+   pinned children. */
+.cv-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 100svh;
+}
+
+/* Native scroll-driven reading-progress bar. No JS, no rAF — the animation is
+   linked straight to the document scroll on the compositor via a scroll
+   timeline. Progressive enhancement: browsers without scroll timelines simply
+   never show it (it stays scaled to 0). */
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 50;
+  transform-origin: 0 50%;
+  scale: 0 1;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+  box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 70%, transparent);
+}
+@supports (animation-timeline: scroll()) {
+  @keyframes scroll-progress-grow { to { scale: 1 1; } }
+  .scroll-progress {
+    animation: scroll-progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress { display: none; }
+}
+
 /* A single bright arc of light circling the reserve button's rim. The element
    stays put (rotating a wide pill would swing its ends out like a clock hand);
    instead only the conic gradient's start angle animates, so the highlight
@@ -165,6 +201,22 @@ body {
 @keyframes halo-spin { to { --halo-angle: 360deg; } }
 @media (prefers-reduced-motion: no-preference) {
   .btn-halo { animation: halo-spin 7s linear infinite; }
+}
+
+/* Native <dialog> entrance: scale + fade the panel and its backdrop in from
+   the top layer. `allow-discrete` lets `display`/top-layer participate in the
+   transition so it animates on open. Reduced-motion users get an instant show. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes reserve-in {
+    from { opacity: 0; transform: translateY(12px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes reserve-backdrop-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .reserve-dialog[open] { animation: reserve-in 0.32s cubic-bezier(0.22, 1, 0.36, 1); }
+  .reserve-dialog[open]::backdrop { animation: reserve-backdrop-in 0.32s ease; }
 }
 
 @keyframes holo-pan {

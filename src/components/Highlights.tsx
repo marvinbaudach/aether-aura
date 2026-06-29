@@ -96,7 +96,7 @@ const Highlights = (): JSX.Element | null => {
   }
 
   return (
-    <section className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+    <section className="cv-section relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       {/* Hover or keyboard focus anywhere in the gallery pauses the rotation so
           it never slides out from under someone reading or interacting. */}
       <div

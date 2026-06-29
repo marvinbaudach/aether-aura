@@ -82,7 +82,7 @@ const CallWidget = (): JSX.Element => {
 
 const TelephonyFeature = (): JSX.Element => {
   return (
-    <section id="connect" className="relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+    <section id="connect" className="cv-section relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       <div className="mx-auto w-full max-w-2xl text-center">
         <Reveal className="relative">
           <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">On the go</p>
