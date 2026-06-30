@@ -147,11 +147,10 @@ const AuroraGlow = (): JSX.Element => {
     // degrades silently to the pointer-only behaviour if denied/unsupported.
     interface OrientCtor { requestPermission?: () => Promise<PermissionState> }
     const Ctor = window.DeviceOrientationEvent as unknown as OrientCtor | undefined
-    let gestureBound = false
+    // Held so the cleanup can drop the gesture listener if it never fired.
+    let requestOnce: (() => void) | null = null
     if (Ctor && typeof Ctor.requestPermission === 'function') {
-      const requestOnce = () => {
-        if (gestureBound) return
-        gestureBound = true
+      requestOnce = () => {
         void Ctor.requestPermission?.().then((state) => {
           if (state === 'granted') window.addEventListener('deviceorientation', onOrient)
         }).catch(() => undefined)
@@ -208,6 +207,7 @@ const AuroraGlow = (): JSX.Element => {
       window.removeEventListener('pointermove', onPointer)
       window.removeEventListener('pointerdown', onPointer)
       window.removeEventListener('deviceorientation', onOrient)
+      if (requestOnce) window.removeEventListener('pointerdown', requestOnce)
       ro.disconnect()
       io.disconnect()
       gl.canvas.remove()
