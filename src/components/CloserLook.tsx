@@ -55,7 +55,7 @@ const CloserLook = (): JSX.Element => {
                     <img src={img.jpg} alt={img.alt} className="h-full w-full object-contain p-4" loading="lazy" decoding="async" />
                   </m.picture>
                 </AnimatePresence>
-                <div className="pointer-events-none absolute left-1/2 top-[12%] h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+                <div className="pointer-events-none absolute left-1/2 top-[12%] h-px w-2/3 -translate-x-1/2 bg-linear-to-r from-transparent via-accent/40 to-transparent" />
                 {/* Caption ties the render to the selected note — essential on
                     mobile, where the accordion sits below the image. */}
                 <AnimatePresence mode="wait">

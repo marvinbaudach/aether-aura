@@ -98,7 +98,7 @@ const HoloFeature = (): JSX.Element => {
             exactly 3:4, so object-cover shows the whole image with no crop. */}
         <div className="flex justify-center">
           <div className="relative w-full max-w-[min(100%,calc(82vh*3/4))] overflow-hidden rounded-[28px] border border-hairline-soft bg-black">
-            <div className="relative aspect-[3/4]">
+            <div className="relative aspect-3/4">
               {load ? (
                 <video
                   key={videoSrc}

@@ -41,7 +41,7 @@ const SheenButton = ({ children, onClick }: { children: string; onClick?: () => 
       {/* A single bright arc of light circling the rim — a machined, alive edge
           rather than a static border. Only the conic angle animates (see
           .btn-halo) so the element stays put; reduced-motion holds it still. */}
-      <span aria-hidden className="btn-halo pointer-events-none absolute -inset-[2px] rounded-full" style={{ filter: 'blur(2px)' }} />
+      <span aria-hidden className="btn-halo pointer-events-none absolute inset-[-2px] rounded-full" style={{ filter: 'blur(2px)' }} />
 
       <button
         ref={ref}
@@ -54,7 +54,7 @@ const SheenButton = ({ children, onClick }: { children: string; onClick?: () => 
         {/* Ignition: cyan light floods in from the left on hover. */}
         <span
           aria-hidden
-          className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-[linear-gradient(100deg,oklch(0.86_0.13_200),oklch(0.7_0.15_215))] transition-transform duration-[450ms] ease-out group-hover:scale-x-100"
+          className="pointer-events-none absolute inset-0 origin-left scale-x-0 bg-[linear-gradient(100deg,oklch(0.86_0.13_200),oklch(0.7_0.15_215))] transition-transform duration-450 ease-out group-hover:scale-x-100"
         />
         {/* Cursor-tracked specular sheen. */}
         <m.span

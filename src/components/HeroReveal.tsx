@@ -126,7 +126,7 @@ const HeroReveal = (): JSX.Element => {
           style={{ opacity: bgDim }}
           className="absolute inset-0 z-10 bg-[radial-gradient(70%_70%_at_50%_42%,transparent_0%,oklch(0.13_0.013_245/0.55)_70%,oklch(0.13_0.013_245/0.9)_100%)]"
         />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 z-10 h-[42vh] bg-gradient-to-b from-transparent to-bg" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 z-10 h-[42vh] bg-linear-to-b from-transparent to-bg" />
         {/* Central scrim: the vignette darkens the edges but leaves the bright
             watch in the middle — exactly behind the wordmark — so add a soft
             dark pool there to keep the title and copy legible. */}
@@ -148,7 +148,7 @@ const HeroReveal = (): JSX.Element => {
             {/* No vertical drift: a floating wordmark fights the "machined,
                 precise titanium" message — the brushed-metal sheen carries the
                 life instead. Just depth + a faint accent halo here. */}
-            <div className="[filter:drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))_drop-shadow(0_0_40px_oklch(0.7_0.13_205/0.25))]">
+            <div className="filter-[drop-shadow(0_2px_22px_oklch(0.13_0.013_245/0.85))_drop-shadow(0_0_40px_oklch(0.7_0.13_205/0.25))]">
               <h1 className="text-titanium font-display text-[clamp(3.2rem,15vw,12rem)] font-medium leading-[0.9] tracking-[-0.02em]">
                 AETHER
               </h1>
@@ -187,7 +187,7 @@ const HeroReveal = (): JSX.Element => {
           className="absolute bottom-[3.5vh] left-1/2 z-20 -translate-x-1/2 text-center"
         >
           <span className="font-sans text-[0.68rem] uppercase tracking-[0.3em] text-muted">Scroll</span>
-          <div className="mx-auto mt-2 h-9 w-[1px] bg-gradient-to-b from-accent to-transparent" />
+          <div className="mx-auto mt-2 h-9 w-px bg-linear-to-b from-accent to-transparent" />
         </m.div>
       </div>
     </section>

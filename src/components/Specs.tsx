@@ -78,7 +78,7 @@ const SpecRow = ({ r }: { r: Row }): JSX.Element => {
       {/* top hairline that draws across as the row arrives */}
       <m.span
         aria-hidden
-        className="absolute left-0 top-0 h-px w-full origin-left bg-gradient-to-r from-accent/60 via-hairline-soft to-transparent transition-[filter] group-hover:[filter:drop-shadow(0_0_6px_var(--accent))]"
+        className="absolute left-0 top-0 h-px w-full origin-left bg-linear-to-r from-accent/60 via-hairline-soft to-transparent transition-[filter] group-hover:filter-[drop-shadow(0_0_6px_var(--accent))]"
         variants={{ hidden: { scaleX: 0, opacity: 0 }, show: { scaleX: 1, opacity: 1 } }}
         transition={{ duration: reduced ? 0 : 0.7, ease }}
       />
@@ -118,7 +118,7 @@ const SpecRow = ({ r }: { r: Row }): JSX.Element => {
         variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
         transition={{ duration: reduced ? 0 : 0.6, ease, delay: reduced ? 0 : 0.15 }}
       >
-        <span className="font-display text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-none text-gradient-accent [filter:drop-shadow(0_0_18px_oklch(0.78_0.15_200/0.35))]">
+        <span className="font-display text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-none text-gradient-accent filter-[drop-shadow(0_0_18px_oklch(0.78_0.15_200/0.35))]">
           {r.stat}
         </span>
         <span className="font-sans text-[0.72rem] uppercase tracking-[0.28em] text-muted">{r.unit}</span>

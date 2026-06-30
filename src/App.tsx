@@ -70,7 +70,7 @@ const App = (): JSX.Element => {
         <a href="#main-content" className="skip-link">Skip to content</a>
         {/* Pure CSS scroll-driven reading-progress bar (see .scroll-progress). */}
         <div aria-hidden className="scroll-progress" />
-        <main id="main-content" tabIndex={-1} className="text-ink outline-none">
+        <main id="main-content" tabIndex={-1} className="text-ink outline-hidden">
           <HeroReveal />
           <Highlights />
           <Centerpiece />

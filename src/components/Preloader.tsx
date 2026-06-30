@@ -28,7 +28,7 @@ const Preloader = (): JSX.Element => {
     <m.div
       initial={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: reduced ? 0.4 : 0.5, delay: reduced ? 0 : 0.7 } }}
-      className="fixed inset-0 z-[60] grid place-items-center overflow-hidden bg-bg"
+      className="fixed inset-0 z-60 grid place-items-center overflow-hidden bg-bg"
     >
       <div className="relative flex flex-col items-center">
         <m.div exit={markExit} className="relative grid h-16 w-16 place-items-center">

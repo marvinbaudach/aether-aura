@@ -66,7 +66,7 @@ const GlassTile = ({ label, children, icon, index }: GlassTileProps): JSX.Elemen
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
       {/* light-catching top edge */}
-      <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
+      <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
 
       {(icon ?? index) && (
         <div className="relative flex items-center justify-between">
@@ -84,7 +84,7 @@ const GlassTile = ({ label, children, icon, index }: GlassTileProps): JSX.Elemen
       )}
 
       <span className="relative mt-4 block font-sans text-[0.72rem] uppercase tracking-[0.28em] text-accent">{label}</span>
-      <p className="relative mt-2 font-display text-[clamp(0.98rem,1.5vw,1.18rem)] font-medium leading-[1.25] text-ink">
+      <p className="relative mt-2 font-display text-[clamp(0.98rem,1.5vw,1.18rem)] font-medium leading-tight text-ink">
         {children}
       </p>
     </m.div>

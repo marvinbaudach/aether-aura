@@ -42,7 +42,7 @@ const Gem = ({ ignite }: { ignite: boolean }): JSX.Element => {
       )}
       <svg
         viewBox="0 0 48 48" role="img" aria-label="Faceted sapphire"
-        className="relative h-12 w-12 overflow-visible transition-[filter] duration-500 [filter:drop-shadow(0_4px_8px_oklch(0.13_0.013_245/0.65))] group-hover:[filter:drop-shadow(0_0_14px_oklch(0.85_0.12_205/0.7))]"
+        className="relative h-12 w-12 overflow-visible transition-[filter] duration-500 filter-[drop-shadow(0_4px_8px_oklch(0.13_0.013_245/0.65))] group-hover:filter-[drop-shadow(0_0_14px_oklch(0.85_0.12_205/0.7))]"
       >
         <defs>
           <linearGradient id="gemTable" x1="0" y1="0" x2="0" y2="1">
@@ -202,7 +202,7 @@ const Footer = (): JSX.Element => {
     <footer className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden border-t border-hairline-soft px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       <m.div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-[1px] w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-accent/50 to-transparent"
+        className="pointer-events-none absolute left-1/2 top-0 h-px w-2/3 -translate-x-1/2 bg-linear-to-r from-transparent via-accent/50 to-transparent"
         initial={{ opacity: 0 }}
         animate={{ opacity: revealed ? 1 : 0 }}
         transition={{ duration: 0.9, ease }}

@@ -48,7 +48,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
       // clicked (the dialog element fills the viewport, its children don't).
       onClick={(e) => { if (e.target === ref.current) onClose() }}
       aria-labelledby="reserve-title"
-      className="reserve-dialog w-[min(92vw,30rem)] rounded-3xl border border-hairline-soft bg-bg-soft p-0 text-ink backdrop:bg-[oklch(0.08_0.01_245/0.6)] backdrop:backdrop-blur-sm"
+      className="reserve-dialog w-[min(92vw,30rem)] rounded-3xl border border-hairline-soft bg-bg-soft p-0 text-ink backdrop:bg-[oklch(0.08_0.01_245/0.6)] backdrop:backdrop-blur-xs"
     >
       <div className="relative p-8">
         <button
@@ -98,7 +98,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
               name="name"
               type="text"
               autoComplete="name"
-              className="mt-2 w-full rounded-xl border border-hairline bg-bg px-4 py-3 font-sans text-ink outline-none transition-colors placeholder:text-faint focus-visible:border-accent/60"
+              className="mt-2 w-full rounded-xl border border-hairline bg-bg px-4 py-3 font-sans text-ink outline-hidden transition-colors placeholder:text-faint focus-visible:border-accent/60"
               placeholder="Jane Doe"
             />
 
@@ -109,7 +109,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
               type="email"
               required
               autoComplete="email"
-              className="mt-2 w-full rounded-xl border border-hairline bg-bg px-4 py-3 font-sans text-ink outline-none transition-colors placeholder:text-faint focus-visible:border-accent/60"
+              className="mt-2 w-full rounded-xl border border-hairline bg-bg px-4 py-3 font-sans text-ink outline-hidden transition-colors placeholder:text-faint focus-visible:border-accent/60"
               placeholder="you@example.com"
             />
 

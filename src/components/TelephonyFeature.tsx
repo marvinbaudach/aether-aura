@@ -39,7 +39,7 @@ const CallWidget = (): JSX.Element => {
           ))}
         {/* A light arc circles the avatar — the same motif as the reserve button,
             tying the two sections together. */}
-        <span aria-hidden className="btn-halo pointer-events-none absolute h-[5.5rem] w-[5.5rem] rounded-full" style={{ filter: 'blur(2px)' }} />
+        <span aria-hidden className="btn-halo pointer-events-none absolute h-22 w-22 rounded-full" style={{ filter: 'blur(2px)' }} />
         <div className="relative grid h-20 w-20 place-items-center rounded-full border border-accent/50 bg-bg-lift text-accent">
           <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="1.5">
             <circle cx="12" cy="8" r="4" />
@@ -66,7 +66,7 @@ const CallWidget = (): JSX.Element => {
 
       <div className="mt-7 flex items-center gap-6">
         <span className="grid h-12 w-12 place-items-center rounded-full bg-[oklch(0.3_0.02_25)] text-[oklch(0.8_0.12_25)]">
-          <PhoneGlyph className="h-5 w-5 rotate-[135deg]" />
+          <PhoneGlyph className="h-5 w-5 rotate-135" />
         </span>
         <m.span
           className="grid h-14 w-14 place-items-center rounded-full bg-accent text-bg"
