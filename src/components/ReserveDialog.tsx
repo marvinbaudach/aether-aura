@@ -9,9 +9,11 @@ import { useEffect, useRef, useState, type JSX, type SyntheticEvent } from 'reac
 interface ReserveDialogProps {
   open: boolean
   onClose: () => void
+  /** Configurator summary shown with the reservation, e.g. "Nebula Violet · Midnight". */
+  config?: string
 }
 
-const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
+const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Element => {
   const ref = useRef<HTMLDialogElement>(null)
   const [done, setDone] = useState(false)
 
@@ -71,6 +73,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
             </div>
             <h2 className="mt-6 font-display text-[1.7rem] font-medium">You're on the list.</h2>
             <p className="mx-auto mt-3 max-w-[34ch] font-sans text-[0.98rem] text-muted">
+              {config !== undefined && `Your ${config} build is noted. `}
               We'll reach you the moment first-run reservations open. Until then —
               measured in light.
             </p>
@@ -84,7 +87,9 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
           </div>
         ) : (
           <form onSubmit={onSubmit} className="text-left">
-            <p className="font-sans text-[0.72rem] uppercase tracking-[0.34em] text-accent">First run · 2120</p>
+            <p className="font-sans text-[0.72rem] uppercase tracking-[0.34em] text-accent">
+              First run · 2120{config !== undefined && ` · ${config}`}
+            </p>
             <h2 id="reserve-title" className="mt-3 font-display text-[1.8rem] font-medium leading-tight">
               Reserve the first light.
             </h2>

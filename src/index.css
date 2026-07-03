@@ -253,6 +253,43 @@ body {
   .reserve-dialog[open]::backdrop { animation: reserve-backdrop-in 0.32s ease; }
 }
 
+/* ---- Camera hologram demo ---- */
+
+/* Re-light the segmented figure as the Aura's projection: desaturate, then
+   sepia gives a uniform warm base that hue-rotate swings into the brand cyan;
+   saturate pushes it back to a glow. The canvas is transparent outside the
+   person, so the drop-shadow hugs the silhouette — the hologram's rim light. */
+.holo-cam {
+  filter: grayscale(1) brightness(1.12) contrast(1.1) sepia(1) saturate(2.8) hue-rotate(150deg)
+    drop-shadow(0 0 22px oklch(0.82 0.14 205 / 0.75));
+}
+/* Slow volumetric sway: the figure drifts around the Y axis under perspective,
+   like light hanging in the air rather than an image glued to the page. */
+.holo-stage3d { perspective: 900px; }
+@keyframes holo-sway {
+  0%, 100% { transform: rotateY(-7deg) translateY(0); }
+  50% { transform: rotateY(7deg) translateY(-8px); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .holo-sway { animation: holo-sway 9s ease-in-out infinite; }
+}
+/* Projector instability: brief, uneven dips in opacity — enough to feel like
+   emitted light, subtle enough to keep the face readable. Off for reduced motion. */
+@keyframes holo-flicker {
+  0%, 100% { opacity: 0.94; }
+  7%  { opacity: 0.8; }
+  9%  { opacity: 0.96; }
+  23% { opacity: 0.87; }
+  27% { opacity: 0.97; }
+  54% { opacity: 0.9; }
+  61% { opacity: 0.79; }
+  64% { opacity: 0.95; }
+  86% { opacity: 0.88; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .holo-flicker { animation: holo-flicker 5.5s linear infinite; }
+}
+
 @keyframes holo-pan {
   0% { background-position: 0% 50%; }
   100% { background-position: 200% 50%; }

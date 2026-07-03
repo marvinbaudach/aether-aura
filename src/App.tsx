@@ -10,6 +10,8 @@ import CloserLook from './components/CloserLook'
 import HealthFeature from './components/HealthFeature'
 import TelephonyFeature from './components/TelephonyFeature'
 import HoloFeature from './components/HoloFeature'
+import HoloDemo from './components/HoloDemo'
+import Configurator from './components/Configurator'
 import BatteryRing from './components/BatteryRing'
 import Specs from './components/Specs'
 import CTA from './components/CTA'
@@ -78,8 +80,10 @@ const App = (): JSX.Element => {
           <HealthFeature />
           <TelephonyFeature />
           <HoloFeature />
+          <HoloDemo />
           <BatteryRing />
           <Specs />
+          <Configurator />
           <CTA />
           <Footer />
         </main>
