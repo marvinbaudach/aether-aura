@@ -55,7 +55,8 @@ const Highlights = (): JSX.Element | null => {
   // toggle, and pointer hover / keyboard focus pause it while they read.
   const [paused, setPaused] = useState(false)
   const [hovered, setHovered] = useState(false)
-  const autoplay = !reduced && !paused && !hovered
+  const [focused, setFocused] = useState(false)
+  const autoplay = !reduced && !paused && !hovered && !focused
 
   useEffect(() => {
     if (!autoplay) return
@@ -98,13 +99,23 @@ const Highlights = (): JSX.Element | null => {
   return (
     <section className="cv-section relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       {/* Hover or keyboard focus anywhere in the gallery pauses the rotation so
-          it never slides out from under someone reading or interacting. */}
+          it never slides out from under someone reading or interacting. Both
+          signals are deliberately narrow so the pause can never stick:
+          - hover counts only for a real mouse (a touch tap fires pointerenter
+            but never pointerleave, which froze the rotation for good), and
+          - focus counts only when it is :focus-visible — clicking a tab focuses
+            it too, but without a visible ring, and holding the pause for an
+            invisible focus stopped the show permanently after any click.
+          Blur only clears the pause once focus leaves the gallery entirely,
+          not on every focus move between tabs. */}
       <div
         className="mx-auto w-full max-w-shell"
-        onMouseEnter={() => { setHovered(true); }}
-        onMouseLeave={() => { setHovered(false); }}
-        onFocusCapture={() => { setHovered(true); }}
-        onBlurCapture={() => { setHovered(false); }}
+        onPointerEnter={(e) => { if (e.pointerType === 'mouse') setHovered(true) }}
+        onPointerLeave={() => { setHovered(false); }}
+        onFocusCapture={(e) => { if (e.target.matches(':focus-visible')) setFocused(true) }}
+        onBlurCapture={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false)
+        }}
       >
         <Reveal className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
           <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
