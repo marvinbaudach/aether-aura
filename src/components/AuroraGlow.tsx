@@ -80,9 +80,9 @@ const AuroraGlow = (): JSX.Element => {
   const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (reduced) return
+    if (reduced === true) return
     const mount = mountRef.current
-    if (!mount) return
+    if (mount === null) return
 
     const renderer = new Renderer({ alpha: true, antialias: false, dpr: Math.min(window.devicePixelRatio, 2) })
     const gl = renderer.gl
@@ -149,14 +149,14 @@ const AuroraGlow = (): JSX.Element => {
     const Ctor = window.DeviceOrientationEvent as unknown as OrientCtor | undefined
     // Held so the cleanup can drop the gesture listener if it never fired.
     let requestOnce: (() => void) | null = null
-    if (Ctor && typeof Ctor.requestPermission === 'function') {
+    if (Ctor !== undefined && typeof Ctor.requestPermission === 'function') {
       requestOnce = () => {
         void Ctor.requestPermission?.().then((state) => {
           if (state === 'granted') window.addEventListener('deviceorientation', onOrient)
         }).catch(() => undefined)
       }
       window.addEventListener('pointerdown', requestOnce, { once: true })
-    } else if (Ctor) {
+    } else if (Ctor !== undefined) {
       window.addEventListener('deviceorientation', onOrient)
     }
 
@@ -207,7 +207,7 @@ const AuroraGlow = (): JSX.Element => {
       window.removeEventListener('pointermove', onPointer)
       window.removeEventListener('pointerdown', onPointer)
       window.removeEventListener('deviceorientation', onOrient)
-      if (requestOnce) window.removeEventListener('pointerdown', requestOnce)
+      if (requestOnce !== null) window.removeEventListener('pointerdown', requestOnce)
       ro.disconnect()
       io.disconnect()
       gl.canvas.remove()

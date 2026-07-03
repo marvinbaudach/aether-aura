@@ -50,7 +50,7 @@ const HeroReveal = (): JSX.Element => {
   // actually rolling (long enough to outlast the loader), then stop.
   useEffect(() => {
     const v = videoRef.current
-    if (!v) return
+    if (v === null) return
     let timer = 0
     let tries = 0
     const ensurePlaying = () => {

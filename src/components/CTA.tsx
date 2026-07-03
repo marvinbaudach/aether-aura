@@ -30,7 +30,7 @@ const SheenButton = ({ children, onClick }: { children: string; onClick?: () => 
 
   const onMove = (e: MouseEvent<HTMLButtonElement>) => {
     const el = ref.current
-    if (!el) return
+    if (el === null) return
     const r = el.getBoundingClientRect()
     mx.set(((e.clientX - r.left) / r.width) * 100)
     my.set(((e.clientY - r.top) / r.height) * 100)

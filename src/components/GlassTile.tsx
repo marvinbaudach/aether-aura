@@ -34,7 +34,7 @@ const GlassTile = ({ label, children, icon, index }: GlassTileProps): JSX.Elemen
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
     const el = ref.current
-    if (!el || reduced) return
+    if (el === null || reduced) return
     const r = el.getBoundingClientRect()
     const nx = (e.clientX - r.left) / r.width
     const ny = (e.clientY - r.top) / r.height
@@ -68,14 +68,14 @@ const GlassTile = ({ label, children, icon, index }: GlassTileProps): JSX.Elemen
       {/* light-catching top edge */}
       <span aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-accent/40 to-transparent" />
 
-      {(icon ?? index) && (
+      {(icon !== undefined || index !== undefined) && (
         <div className="relative flex items-center justify-between">
-          {icon && (
+          {icon !== undefined && (
             <span className="grid h-10 w-10 place-items-center rounded-xl border border-hairline-soft bg-bg-soft/50 text-accent transition-colors duration-300 group-hover:border-accent/50 group-hover:bg-accent/10">
               <span className="block h-5 w-5">{icon}</span>
             </span>
           )}
-          {index && (
+          {index !== undefined && (
             <span className="font-mono text-[0.72rem] tabular-nums text-faint transition-colors duration-300 group-hover:text-accent">
               {index}
             </span>

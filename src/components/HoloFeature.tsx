@@ -24,7 +24,7 @@ const HoloFeature = (): JSX.Element => {
   useEffect(() => {
     const v = videoRef.current
     const section = sectionRef.current
-    if (!v || !section || !load) return
+    if (v === null || section === null || !load) return
 
     let onScreen = false
     const play = () => { void v.play().catch(() => undefined) }
@@ -78,7 +78,7 @@ const HoloFeature = (): JSX.Element => {
             <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02]">
               <span
                 className="text-gradient-accent"
-                style={reduced ? undefined : { backgroundSize: '200% auto', animation: 'holo-pan 6s linear infinite' }}
+                style={reduced === true ? undefined : { backgroundSize: '200% auto', animation: 'holo-pan 6s linear infinite' }}
               >
                 Face to face
               </span>

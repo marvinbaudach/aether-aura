@@ -19,7 +19,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
   // ways to enter/leave the top layer, so mirror `open` onto them.
   useEffect(() => {
     const d = ref.current
-    if (!d) return
+    if (d === null) return
     if (open && !d.open) {
       setDone(false)
       d.showModal()
@@ -36,7 +36,7 @@ const ReserveDialog = ({ open, onClose }: ReserveDialogProps): JSX.Element => {
     // startViewTransition) fall back to an instant swap.
     const swap = (): void => { setDone(true) }
     const vt = (document as unknown as { startViewTransition?: (cb: () => void) => void }).startViewTransition
-    if (vt) vt.call(document, swap)
+    if (vt !== undefined) vt.call(document, swap)
     else swap()
   }
 

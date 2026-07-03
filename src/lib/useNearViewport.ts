@@ -13,7 +13,7 @@ const useNearViewport = <T extends Element>(
 
   useEffect(() => {
     const el = ref.current
-    if (!el || near) return
+    if (el === null || near) return
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {

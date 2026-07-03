@@ -64,7 +64,7 @@ const Highlights = (): JSX.Element | null => {
   }, [index, autoplay])
 
   const slide = SLIDES[index]
-  if (!slide) return null
+  if (slide === undefined) return null
 
   const select = (next: number) => {
     const wrapped = (next + SLIDES.length) % SLIDES.length

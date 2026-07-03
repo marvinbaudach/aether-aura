@@ -22,16 +22,16 @@ const Centerpiece = (): JSX.Element => {
 
   const coarse = useMediaQuery('(pointer: coarse)')
   const reduced = useReducedMotion()
-  const scrub = !coarse && !reduced
+  const scrub = !coarse && reduced !== true
 
   // ---- Scrub path: decoded frame sequence on a canvas ----------------------
   useEffect(() => {
     const section = sectionRef.current
     const canvas = canvasRef.current
-    if (!scrub || !section || !canvas) return
+    if (!scrub || section === null || canvas === null) return
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (ctx === null) return
 
     const frames: HTMLImageElement[] = Array.from({ length: FRAME_COUNT }, (_, i) => {
       const img = new Image()
@@ -40,7 +40,7 @@ const Centerpiece = (): JSX.Element => {
       return img
     })
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const dpr = Math.min(window.devicePixelRatio > 0 ? window.devicePixelRatio : 1, 2)
     const sizeCanvas = () => {
       canvas.width = Math.round(canvas.clientWidth * dpr)
       canvas.height = Math.round(canvas.clientHeight * dpr)
@@ -52,9 +52,9 @@ const Centerpiece = (): JSX.Element => {
     const nearestReady = (idx: number): HTMLImageElement | null => {
       for (let d = 0; d < FRAME_COUNT; d++) {
         const a = frames[idx - d]
-        if (a && a.complete && a.naturalWidth > 0) return a
+        if (a !== undefined && a.complete && a.naturalWidth > 0) return a
         const b = frames[idx + d]
-        if (b && b.complete && b.naturalWidth > 0) return b
+        if (b !== undefined && b.complete && b.naturalWidth > 0) return b
       }
       return null
     }
@@ -63,7 +63,7 @@ const Centerpiece = (): JSX.Element => {
     const draw = (idx: number) => {
       if (idx === lastDrawn) return
       const img = nearestReady(idx)
-      if (!img) return
+      if (img === null) return
       lastDrawn = idx
       const cw = canvas.width
       const ch = canvas.height
@@ -104,7 +104,7 @@ const Centerpiece = (): JSX.Element => {
 
     // Draw the first frame as soon as it decodes so there's no blank flash.
     const first = frames[0]
-    if (first) {
+    if (first !== undefined) {
       if (first.complete) draw(0)
       else first.onload = () => { draw(0); }
     }
@@ -124,7 +124,7 @@ const Centerpiece = (): JSX.Element => {
   useEffect(() => {
     const section = sectionRef.current
     const video = videoRef.current
-    if (scrub || !section || !video) return
+    if (scrub || section === null || video === null) return
     video.loop = true
     const play = () => { void video.play().catch(() => undefined) }
     const io = new IntersectionObserver(
