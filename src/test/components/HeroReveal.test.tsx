@@ -14,6 +14,15 @@ describe('HeroReveal reduced motion', () => {
     expect(media.play).toHaveBeenCalled()
   })
 
+  it('sizes the sticky stage to the small viewport on touch, h-screen otherwise', () => {
+    mockMedia()
+    stubMediaPlayback()
+    const { container } = render(<HeroReveal />)
+    const stage = container.querySelector('.sticky')
+    expect(stage).toHaveClass('h-screen')
+    expect(stage).toHaveClass('pointer-coarse:h-svh')
+  })
+
   it('renders a static poster with the wordmark and tiles, and no film', () => {
     mockMedia([REDUCED])
     const media = stubMediaPlayback()

@@ -112,7 +112,10 @@ const HeroMotion = (): JSX.Element => {
     <section id="top" ref={ref} className="relative h-[185vh]">
       {/* Near-black base matched to the video's own dark studio edges, so the
           clip blends into a full-width field with no lighter side bars. */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[oklch(0.07_0.014_245)]">
+      {/* Touch browsers collapse their toolbar while scrolling, so a 100vh stage
+          overshoots the visible viewport and clips the tiles at the bottom.
+          Size it to the small viewport there; mouse-driven desktop keeps h-screen. */}
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-[oklch(0.07_0.014_245)] pointer-coarse:h-svh">
         {/* Product film: the watch turns through a slow, seamless 360° loop. It
             autoplays on its own and only blurs / scales back as the visitor
             scrolls into the tiles. */}
