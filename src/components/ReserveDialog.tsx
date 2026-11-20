@@ -67,7 +67,7 @@ const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Eleme
       // clicked (the dialog element fills the viewport, its children don't).
       onClick={(e) => { if (e.target === ref.current) onClose() }}
       aria-labelledby={titleId}
-      className="reserve-dialog w-[min(92vw,30rem)] rounded-2xl border border-hairline-soft bg-bg-soft p-0 text-ink backdrop:bg-[oklch(0.08_0.01_245/0.6)] backdrop:backdrop-blur-xs"
+      className="reserve-dialog m-auto w-[min(92vw,30rem)] rounded-2xl border border-hairline-soft bg-bg-soft p-0 text-ink backdrop:bg-[oklch(0.08_0.01_245/0.6)] backdrop:backdrop-blur-xs"
     >
       <div className="relative p-8">
         <button
