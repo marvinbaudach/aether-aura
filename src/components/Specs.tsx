@@ -1,10 +1,11 @@
-import type { JSX } from 'react'
+import type { JSX, ReactNode } from 'react'
+import { INF_PATH } from './infinityPath'
 
 interface Row {
   n: string
   h: string
   t: string
-  stat: string
+  stat: ReactNode
   unit: string
   icon: JSX.Element
 }
@@ -32,6 +33,14 @@ const DepthIcon = (
   </svg>
 )
 
+// Instrument Sans has no infinity glyph, so a typed ∞ would fall back to
+// whatever the OS ships. Draw it at the figure's size and weight instead.
+const InfinityFigure = (): JSX.Element => (
+  <svg viewBox="24 16 72 28" role="img" aria-label="Infinity" className="inline-block h-[0.72em] w-auto" fill="none">
+    <path d={INF_PATH} stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+
 const rows: Row[] = [
   {
     n: '01',
@@ -45,7 +54,7 @@ const rows: Row[] = [
     n: '02',
     h: 'Lifetime nuclear cell',
     t: 'A sealed radioisotope rod runs the Aura for a lifetime. It is never charged or opened.',
-    stat: '∞',
+    stat: <InfinityFigure />,
     unit: 'years sealed',
     icon: AtomIcon,
   },

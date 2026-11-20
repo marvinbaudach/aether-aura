@@ -2,9 +2,8 @@ import { useRef, type JSX } from 'react'
 import { m, useInView } from 'framer-motion'
 import { ease } from '../anim'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { INF_PATH } from './infinityPath'
 
-const INF_PATH =
-  'M30 30 C30 14 52 14 60 30 C68 46 90 46 90 30 C90 14 68 14 60 30 C52 46 30 46 30 30 Z'
 
 // The "lifetime" mark: the lemniscate draws itself once on first view.
 const InfinityMark = ({ inView, reduced }: { inView: boolean; reduced: boolean }): JSX.Element => (
