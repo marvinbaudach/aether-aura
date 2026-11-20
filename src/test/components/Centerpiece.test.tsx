@@ -102,6 +102,29 @@ describe('Centerpiece stage height', () => {
     expect(stageOf(container)).not.toHaveClass('h-screen')
   })
 
+  it('uses h-svh for reduced motion on a fine pointer, where the section is h-svh too', () => {
+    mockMedia([REDUCED])
+    const { container } = render(<Centerpiece />)
+    expect(container.querySelector('section')).toHaveClass('h-svh')
+    expect(stageOf(container)).toHaveClass('h-svh')
+    expect(stageOf(container)).not.toHaveClass('h-screen')
+  })
+
+  it('swaps the stage height live when the preference flips', () => {
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)
+    const media = mockMedia()
+    const { container } = render(<Centerpiece />)
+    expect(stageOf(container)).toHaveClass('h-screen')
+
+    media.set(REDUCED, true)
+    expect(container.querySelector('section')).toHaveClass('h-svh')
+    expect(stageOf(container)).toHaveClass('h-svh')
+
+    media.set(REDUCED, false)
+    expect(container.querySelector('section')).toHaveClass('h-[200vh]')
+    expect(stageOf(container)).toHaveClass('h-screen')
+  })
+
   it('keeps h-screen for the scrub track', () => {
     mockMedia()
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)

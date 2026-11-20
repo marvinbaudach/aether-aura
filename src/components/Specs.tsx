@@ -36,7 +36,7 @@ const DepthIcon = (
 // Instrument Sans has no infinity glyph, so a typed ∞ would fall back to
 // whatever the OS ships. Draw it at the figure's size and weight instead.
 const InfinityFigure = (): JSX.Element => (
-  <svg viewBox="24 16 72 28" role="img" aria-label="Infinity" className="inline-block h-[0.72em] w-auto" fill="none">
+  <svg viewBox="24 16 72 28" role="img" aria-label="Infinity" className="relative top-[0.04em] inline-block h-[0.74em] w-auto align-baseline" fill="none">
     <path d={INF_PATH} stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )

@@ -83,6 +83,11 @@ body {
    it; it is plain text, not a control, so a ring around it would be noise.
    Scoped to the heading because roving-tabindex tabs also use tabindex=-1. */
 .reserve-dialog h2[tabindex='-1']:focus-visible { outline: none; }
+/* Forced-colors mode is where an author-removed outline matters most: keep a
+   system-colour indicator so the moved focus stays visible there. */
+@media (forced-colors: active) {
+  .reserve-dialog h2[tabindex='-1']:focus-visible { outline: 2px solid CanvasText; }
+}
 
 /* Skip-to-content link (WCAG 2.4.1, Bypass Blocks). Visually parked off-screen
    until focused, then it drops into view as the first Tab stop so keyboard and
