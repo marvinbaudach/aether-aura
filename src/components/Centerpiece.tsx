@@ -138,7 +138,10 @@ const Centerpiece = (): JSX.Element => {
 
   return (
     <section ref={sectionRef} className={`relative bg-bg ${scrub ? 'h-[200vh]' : 'h-svh'}`}>
-      <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
+      {/* Scrub keeps the 100vh stage for the 200vh track. Every other path sits in an
+          h-svh section, so the stage must match it or mobile browser chrome
+          pushes it past the section. */}
+      <div className={`sticky top-0 grid w-full place-items-center overflow-hidden ${scrub ? 'h-screen' : 'h-svh'}`}>
         {scrub ? (
           <canvas ref={canvasRef} aria-hidden className="absolute inset-0 z-0 h-full w-full" />
         ) : reduced ? (
