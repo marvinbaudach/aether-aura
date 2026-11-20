@@ -79,6 +79,10 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
+/* The dialog confirmation heading takes focus only so screen readers announce
+   it; it is plain text, not a control, so a ring around it would be noise.
+   Scoped to the heading because roving-tabindex tabs also use tabindex=-1. */
+.reserve-dialog h2[tabindex='-1']:focus-visible { outline: none; }
 
 /* Skip-to-content link (WCAG 2.4.1, Bypass Blocks). Visually parked off-screen
    until focused, then it drops into view as the first Tab stop so keyboard and

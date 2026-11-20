@@ -22,6 +22,7 @@ const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Eleme
   const titleId = `${uid}-title`
   const nameId = `${uid}-name`
   const emailId = `${uid}-email`
+  const confirmRef = useRef<HTMLHeadingElement>(null)
   const [done, setDone] = useState(false)
 
   // Drive the native modal from React state. showModal()/close() are the only
@@ -36,6 +37,15 @@ const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Eleme
       d.close()
     }
   }, [open])
+
+  // The submitted form unmounts and takes keyboard focus with it, so screen
+  // readers would hear nothing. Move focus to the confirmation heading; the
+  // focus change is what announces it. An effect (not onSubmit) because the swap
+  // may run inside a view-transition callback, and only an effect is guaranteed
+  // to see the mounted node.
+  useEffect(() => {
+    if (done) confirmRef.current?.focus()
+  }, [done])
 
   const onSubmit = (e: SyntheticEvent<HTMLFormElement>): void => {
     e.preventDefault()
@@ -78,7 +88,7 @@ const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Eleme
                 <path d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h2 id={titleId} className="mt-6 font-display text-[1.7rem] font-medium">You're on the list.</h2>
+            <h2 ref={confirmRef} id={titleId} tabIndex={-1} className="mt-6 font-display text-[1.7rem] font-medium">You're on the list.</h2>
             <p className="mx-auto mt-3 max-w-[34ch] font-sans text-[0.98rem] text-muted">
               {config !== undefined && `Your ${config} build is noted. `}
               We'll reach you when first-run reservations open.
