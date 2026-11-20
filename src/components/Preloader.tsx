@@ -1,13 +1,14 @@
 import type { JSX } from 'react'
-import { m, useReducedMotion } from 'framer-motion'
+import { m } from 'framer-motion'
 import { ease } from '../anim'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 // Branded loading veil: a sweeping arc and the wordmark. On exit the wordmark
 // sits dead-centre, exactly where the hero's own AETHER title lives, so it
 // grows and dissolves straight into the page beneath as the veil lifts.
 // Reduced-motion users get a still arc and a plain cross-fade.
 const Preloader = (): JSX.Element => {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   const handoff = { duration: 0.85, ease, opacity: { delay: 0.45, duration: 0.4 } }
   const markExit = reduced

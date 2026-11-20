@@ -1,6 +1,7 @@
 import { useEffect, useRef, type JSX } from 'react'
-import { m, useReducedMotion, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
+import { m, useScroll, useTransform, useMotionTemplate } from 'framer-motion'
 import { ease } from '../anim'
+import { useReducedMotion } from '../lib/useReducedMotion'
 import FeatureTile from './FeatureTile'
 
 const TILES = [
@@ -178,7 +179,7 @@ const HeroMotion = (): JSX.Element => {
 }
 
 const HeroReveal = (): JSX.Element => {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   return reduced ? <HeroStatic /> : <HeroMotion />
 }
 

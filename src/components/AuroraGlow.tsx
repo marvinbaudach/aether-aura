@@ -1,6 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react'
 import { Renderer, Triangle, Program, Mesh } from 'ogl'
-import { useReducedMotion } from 'framer-motion'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 // Fragment shader: flowing aurora light from fractal brownian motion noise.
 // Two offset FBM fields drift at different rates over time so the light never
@@ -80,7 +80,7 @@ const AuroraGlow = (): JSX.Element => {
   const mountRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (reduced === true) return
+    if (reduced) return
     const mount = mountRef.current
     if (mount === null) return
 

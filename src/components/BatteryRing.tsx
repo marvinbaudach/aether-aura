@@ -1,6 +1,7 @@
 import { useRef, type JSX } from 'react'
-import { m, useInView, useReducedMotion } from 'framer-motion'
+import { m, useInView } from 'framer-motion'
 import { ease } from '../anim'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 const INF_PATH =
   'M30 30 C30 14 52 14 60 30 C68 46 90 46 90 30 C90 14 68 14 60 30 C52 46 30 46 30 30 Z'
@@ -27,7 +28,7 @@ const BatteryRing = (): JSX.Element => {
   // screens the sweep does not finish while the ring is still below the fold.
   const vizRef = useRef<HTMLDivElement>(null)
   const inView = useInView(vizRef, { once: true, margin: '0px 0px -25% 0px' })
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <section className="cv-section relative flex min-h-svh flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">

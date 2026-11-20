@@ -1,6 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react'
-import { useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 const SRC_MOBILE = 'assets/aura_centerpiece_film_720.mp4'
 
@@ -22,7 +22,7 @@ const Centerpiece = (): JSX.Element => {
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const coarse = useMediaQuery('(pointer: coarse)')
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const scrub = !coarse && !reduced
 
   // ---- Scrub path: decoded frame sequence on a canvas ----------------------

@@ -1,6 +1,6 @@
 import { useEffect, useRef, type JSX } from 'react'
-import { useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
+import { useReducedMotion } from '../lib/useReducedMotion'
 import { useNearViewport } from '../lib/useNearViewport'
 
 const SRC_DESKTOP = 'assets/aura_holo_film.mp4'
@@ -15,7 +15,7 @@ const HoloFeature = (): JSX.Element => {
   // Defer the (heavy) clip download until the section nears the viewport.
   const [sectionRef, load] = useNearViewport<HTMLDivElement>('500px 0px')
 
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const desktop = useMediaQuery('(min-width: 768px)')
   // `media` on a <video><source> is ignored by browsers; pick the file in JS.
   const videoSrc = desktop ? SRC_DESKTOP : SRC_MOBILE

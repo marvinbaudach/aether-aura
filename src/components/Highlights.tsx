@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, type JSX } from 'react'
 import type { KeyboardEvent } from 'react'
-import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { ease } from '../anim'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 interface Slide {
   key: string
@@ -46,7 +47,7 @@ const AUTO_MS = 5200
 // satisfy WCAG 2.2.2 (Pause, Stop, Hide).
 const Highlights = (): JSX.Element | null => {
   const [index, setIndex] = useState(0)
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   // WCAG 2.2.2 (Pause, Stop, Hide): auto-advancing content must be pausable.

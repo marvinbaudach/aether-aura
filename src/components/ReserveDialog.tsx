@@ -89,7 +89,7 @@ const ReserveDialog = ({ open, onClose, config }: ReserveDialogProps): JSX.Eleme
           </div>
         ) : (
           <form onSubmit={onSubmit} className="text-left">
-            <p className="font-sans text-[0.9rem] text-muted">
+            <p className="pr-12 font-sans text-[0.9rem] text-muted">
               First run · 2120{config !== undefined && ` · ${config}`}
             </p>
             <h2 id={titleId} className="mt-3 font-display text-[1.8rem] font-medium leading-tight">

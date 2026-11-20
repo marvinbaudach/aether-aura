@@ -1,6 +1,7 @@
 import { useRef, type JSX } from 'react'
-import { m, useInView, useReducedMotion } from 'framer-motion'
+import { m, useInView } from 'framer-motion'
 import { ease } from '../anim'
+import { useReducedMotion } from '../lib/useReducedMotion'
 
 const ECG_PATH =
   'M0 60 H70 l12 -4 l10 8 l14 -52 l12 92 l13 -44 l10 0 H210 l12 -4 l10 8 l14 -52 l12 92 l13 -44 l10 0 H360'
@@ -10,7 +11,7 @@ const ECG_PATH =
 const EcgLine = (): JSX.Element => {
   const ref = useRef<SVGSVGElement>(null)
   const inView = useInView(ref, { once: true, margin: '-15%' })
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <svg ref={ref} viewBox="0 0 360 120" className="h-24 w-full" fill="none" aria-hidden>
