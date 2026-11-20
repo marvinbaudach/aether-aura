@@ -37,7 +37,7 @@ const DepthIcon = (
 // whatever the OS ships. Draw it at the figure's size and weight instead.
 const InfinityFigure = (): JSX.Element => (
   <svg viewBox="24 16 72 28" role="img" aria-label="Infinity" className="inline-block h-[0.72em] w-auto" fill="none">
-    <path d={INF_PATH} stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d={INF_PATH} stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
