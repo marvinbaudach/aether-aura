@@ -13,16 +13,17 @@ const framePath = (i: number): string =>
 // Cinematic centerpiece. On fine-pointer / motion-allowed devices the film is a
 // scroll-scrubbed image sequence painted to a <canvas>: the watch swings from
 // its titanium back round to the front and settles on the display as the user
-// scrolls. Touch / reduced-motion fall back to a muted autoplay video loop,
-// where scrubbing is unreliable and a decoded frame sequence is wasted bytes.
+// scrolls. Touch falls back to a muted video loop, where scrubbing is
+// unreliable and a decoded frame sequence is wasted bytes. Reduced-motion
+// visitors get the still poster frame and no moving image at all.
 const Centerpiece = (): JSX.Element => {
   const sectionRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
 
   const coarse = useMediaQuery('(pointer: coarse)')
-  const reduced = useReducedMotion()
-  const scrub = !coarse && reduced !== true
+  const reduced = useReducedMotion() ?? false
+  const scrub = !coarse && !reduced
 
   // ---- Scrub path: decoded frame sequence on a canvas ----------------------
   useEffect(() => {
@@ -124,7 +125,7 @@ const Centerpiece = (): JSX.Element => {
   useEffect(() => {
     const section = sectionRef.current
     const video = videoRef.current
-    if (scrub || section === null || video === null) return
+    if (scrub || reduced || section === null || video === null) return
     video.loop = true
     const play = () => { void video.play().catch(() => undefined) }
     const io = new IntersectionObserver(
@@ -133,13 +134,19 @@ const Centerpiece = (): JSX.Element => {
     )
     io.observe(section)
     return () => { io.disconnect() }
-  }, [scrub])
+  }, [scrub, reduced])
 
   return (
-    <section ref={sectionRef} className="relative h-[200vh] snap-start bg-bg">
+    <section ref={sectionRef} className={`relative bg-bg ${scrub ? 'h-[200vh]' : 'h-svh'}`}>
       <div className="sticky top-0 grid h-screen w-full place-items-center overflow-hidden">
         {scrub ? (
           <canvas ref={canvasRef} aria-hidden className="absolute inset-0 z-0 h-full w-full" />
+        ) : reduced ? (
+          <img
+            src="assets/aura_centerpiece_film_poster.jpg"
+            alt="The Aura seen from its titanium back"
+            className="absolute inset-0 z-0 h-full w-full object-contain"
+          />
         ) : (
           <video
             ref={videoRef}

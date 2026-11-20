@@ -1,22 +1,21 @@
 import { useEffect, useRef, type JSX } from 'react'
-import { m, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { useReducedMotion } from 'framer-motion'
 import { useMediaQuery } from '../lib/useMediaQuery'
 import { useNearViewport } from '../lib/useNearViewport'
-import Reveal from './Reveal'
 
 const SRC_DESKTOP = 'assets/aura_holo_film.mp4'
 const SRC_MOBILE = 'assets/aura_holo_film_720.mp4'
 
 // Holographic display showcase. The generated clip is lazy-mounted only when
 // the section approaches the viewport (saves the download for visitors who
-// never scroll this far), then autoplays muted and loops. A gentle parallax
-// lifts the copy as it passes.
+// never scroll this far), then autoplays muted and loops. Reduced-motion
+// visitors get the poster frame and no video.
 const HoloFeature = (): JSX.Element => {
   const videoRef = useRef<HTMLVideoElement>(null)
   // Defer the (heavy) clip download until the section nears the viewport.
   const [sectionRef, load] = useNearViewport<HTMLDivElement>('500px 0px')
 
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const desktop = useMediaQuery('(min-width: 768px)')
   // `media` on a <video><source> is ignored by browsers; pick the file in JS.
   const videoSrc = desktop ? SRC_DESKTOP : SRC_MOBILE
@@ -24,7 +23,7 @@ const HoloFeature = (): JSX.Element => {
   useEffect(() => {
     const v = videoRef.current
     const section = sectionRef.current
-    if (v === null || section === null || !load) return
+    if (v === null || section === null || !load || reduced) return
 
     let onScreen = false
     const play = () => { void v.play().catch(() => undefined) }
@@ -56,50 +55,29 @@ const HoloFeature = (): JSX.Element => {
       io.disconnect()
       window.clearInterval(watchdog)
     }
-  }, [load, sectionRef])
-
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['6%', '-6%'])
-  const glow = useTransform(scrollYProgress, [0, 0.5, 1], [0.3, 0.7, 0.3])
+  }, [load, reduced, sectionRef])
 
   return (
-    <section id="hologram" ref={sectionRef} className="relative flex min-h-svh snap-start flex-col justify-center overflow-hidden bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
-      {/* ambient glow */}
-      <m.div
-        aria-hidden
-        style={{ opacity: glow }}
-        className="pointer-events-none absolute left-1/2 top-1/4 h-[60vh] w-[60vh] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,oklch(0.7_0.15_205/0.25),transparent_70%)] blur-3xl"
-      />
-
-      <div className="relative mx-auto grid max-w-shell items-center gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
-        <m.div style={{ y }}>
-          <Reveal>
-            <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Holographic calls</p>
-            <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02]">
-              <span
-                className="text-gradient-accent"
-                style={reduced === true ? undefined : { backgroundSize: '200% auto', animation: 'holo-pan 6s linear infinite' }}
-              >
-                Face to face
-              </span>
-              <br />
-              off your wrist.
-            </h2>
-            <p className="mt-6 max-w-[40ch] font-sans text-[1.08rem] text-muted">
-              The Aura lifts your caller into the air as a life-size hologram.
-              Telephony you look in the eye.
-            </p>
-          </Reveal>
-        </m.div>
+    <section id="hologram" ref={sectionRef} className="relative flex min-h-svh flex-col justify-center overflow-hidden bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+      <div className="mx-auto grid w-full max-w-shell items-center gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+        <div>
+          <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04]">
+            Face to face
+            <br />
+            off your wrist.
+          </h2>
+          <p className="mt-6 max-w-[40ch] font-sans text-[1.08rem] text-muted">
+            The Aura lifts your caller into the air as a life-size hologram.
+          </p>
+        </div>
 
         {/* Center the frame in the grid track and cap its width so the derived
-            3:4 height can never exceed the viewport — that's what was clipping
-            the hologram + watch on short/narrow windows. Source and box are both
+            3:4 height can never exceed the viewport. Source and box are both
             exactly 3:4, so object-cover shows the whole image with no crop. */}
         <div className="flex justify-center">
-          <div className="relative w-full max-w-[min(100%,calc(82vh*3/4))] overflow-hidden rounded-[28px] border border-hairline-soft bg-black">
+          <div className="relative w-full max-w-[min(100%,calc(82vh*3/4))] overflow-hidden rounded-2xl border border-hairline-soft bg-black">
             <div className="relative aspect-3/4">
-              {load ? (
+              {load && !reduced ? (
                 <video
                   key={videoSrc}
                   ref={videoRef}

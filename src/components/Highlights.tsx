@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, type JSX } from 'react'
 import type { KeyboardEvent } from 'react'
 import { AnimatePresence, m, useReducedMotion } from 'framer-motion'
 import { ease } from '../anim'
-import Reveal from './Reveal'
 
 interface Slide {
   key: string
@@ -20,7 +19,7 @@ const SLIDES: Slide[] = [
     key: 'health',
     label: 'Vitals',
     title: 'Your body, read in light.',
-    body: 'A cyan optical beam samples your pulse ninety times a second — no contact pads, no wires.',
+    body: 'A cyan optical beam samples your pulse ninety times a second, with no contact pads or wires.',
     art: 'aura_hl_vitals',
   },
   {
@@ -41,7 +40,7 @@ const SLIDES: Slide[] = [
 
 const AUTO_MS = 5200
 
-// Apple-style highlights gallery implemented as a proper WAI-ARIA tabs widget:
+// Highlights gallery implemented as a proper WAI-ARIA tabs widget:
 // arrow keys roam the tablist, each tab controls a labelled tabpanel, and the
 // frame auto-advances. A visible pause control plus hover/reduced-motion guards
 // satisfy WCAG 2.2.2 (Pause, Stop, Hide).
@@ -97,7 +96,7 @@ const Highlights = (): JSX.Element | null => {
   }
 
   return (
-    <section className="cv-section relative flex min-h-svh snap-start flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+    <section className="cv-section relative flex min-h-svh flex-col justify-center bg-bg px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
       {/* Hover or keyboard focus anywhere in the gallery pauses the rotation so
           it never slides out from under someone reading or interacting. Both
           signals are deliberately narrow so the pause can never stick:
@@ -117,9 +116,9 @@ const Highlights = (): JSX.Element | null => {
           if (!e.currentTarget.contains(e.relatedTarget)) setFocused(false)
         }}
       >
-        <Reveal className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
-          <h2 className="max-w-[16ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04] text-gradient">
-            Get the highlights.
+        <div className="mb-6 flex flex-col items-start justify-between gap-5 md:mb-10 md:flex-row md:items-end md:gap-6">
+          <h2 className="max-w-[20ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04]">
+            Vitals, calls and depth.
           </h2>
 
           <div className="flex items-center gap-3">
@@ -145,7 +144,7 @@ const Highlights = (): JSX.Element | null => {
                       tabRefs.current[idx] = el
                     }}
                     onClick={() => { setIndex(idx); }}
-                    className={`relative overflow-hidden rounded-full border px-4 py-2 font-sans text-[0.86rem] transition-colors ${
+                    className={`relative min-h-11 overflow-hidden rounded-full border px-5 py-2 font-sans text-[0.95rem] transition-colors ${
                       selected
                         ? 'border-accent/50 bg-accent/15 text-ink'
                         : 'border-hairline text-muted hover:border-accent/40 hover:text-ink'
@@ -175,7 +174,7 @@ const Highlights = (): JSX.Element | null => {
                 onClick={() => { setPaused((p) => !p); }}
                 aria-pressed={paused}
                 aria-label={paused ? 'Resume auto-advancing highlights' : 'Pause auto-advancing highlights'}
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-accent/40 hover:text-ink"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-hairline text-muted transition-colors hover:border-accent/40 hover:text-ink"
               >
                 {paused ? (
                   <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4 fill-current"><path d="M8 5v14l11-7z" /></svg>
@@ -185,14 +184,14 @@ const Highlights = (): JSX.Element | null => {
               </button>
             )}
           </div>
-        </Reveal>
+        </div>
 
         <div
           id={`hl-panel-${slide.key}`}
           role="tabpanel"
           aria-labelledby={`hl-tab-${slide.key}`}
           tabIndex={0}
-          className="relative overflow-hidden rounded-[28px] border border-hairline-soft bg-bg-soft"
+          className="relative overflow-hidden rounded-2xl border border-hairline-soft bg-bg-soft"
         >
           <div className="grid items-center gap-0 md:grid-cols-[1.1fr_0.9fr]">
             <div className="relative aspect-video max-h-[40vh] w-full overflow-hidden md:max-h-none">
@@ -224,8 +223,7 @@ const Highlights = (): JSX.Element | null => {
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.45, ease }}
                 >
-                  <span className="font-sans text-[0.72rem] uppercase tracking-[0.3em] text-accent">{slide.label}</span>
-                  <h3 className="mt-4 font-display text-[clamp(1.6rem,3vw,2.4rem)] font-medium leading-[1.08]">
+                  <h3 className="font-display text-[clamp(1.6rem,3vw,2.4rem)] font-medium leading-[1.08]">
                     {slide.title}
                   </h3>
                   <p className="mt-4 max-w-[40ch] font-sans text-[1.05rem] text-muted">{slide.body}</p>

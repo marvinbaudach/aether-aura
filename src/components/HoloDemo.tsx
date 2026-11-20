@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type JSX } from 'react'
 import type { ImageSegmenter } from '@mediapipe/tasks-vision'
-import Reveal from './Reveal'
+import { btnPrimary, btnSecondary } from './buttonStyles'
 
 // "Try the hologram": the visitor's camera feed turned into the Aura's
 // projection. MediaPipe selfie segmentation (WASM/GPU, fully on-device) cuts
@@ -164,21 +164,20 @@ const HoloDemo = (): JSX.Element => {
   useEffect(() => stopAll, [])
 
   return (
-    <section id="holo-demo" className="cv-section relative snap-start overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)] text-center">
-      <Reveal>
-        <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent">Live demo</p>
-        <h2 className="mx-auto mt-4 max-w-[18ch] font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02] text-gradient">
-          See yourself in <span className="text-gradient-accent">light</span>.
+    <section id="holo-demo" className="cv-section relative flex min-h-svh flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(3rem,6vh,4.5rem)] text-center">
+      <div>
+        <h2 className="mx-auto max-w-[18ch] font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04]">
+          See yourself in light.
         </h2>
         <p className="mx-auto mt-5 max-w-[46ch] font-sans text-[1.05rem] text-muted">
-          This is what your callers will see: you, lifted out of the room and
-          projected — processed entirely on this device. Nothing is recorded,
-          nothing leaves the page.
+          This is what your callers see: you, lifted out of the room and
+          projected. Everything is processed on this device, and nothing is
+          recorded or sent.
         </p>
-      </Reveal>
+      </div>
 
-      <Reveal delay={0.1} className="relative mx-auto mt-12 w-full max-w-md">
-        <div className="holo-stage3d relative aspect-4/5 overflow-hidden rounded-[28px] border border-hairline-soft bg-black/60">
+      <div className="relative mx-auto mt-10 w-full max-w-md">
+        <div className="holo-stage3d relative mx-auto aspect-4/5 max-h-[52svh] overflow-hidden rounded-2xl border border-hairline-soft bg-black/60">
           {/* Hidden source feed the canvas samples from. */}
           <video ref={videoRef} muted playsInline aria-hidden className="pointer-events-none absolute h-px w-px opacity-0" />
 
@@ -201,7 +200,7 @@ const HoloDemo = (): JSX.Element => {
           />
 
           {/* Emitter: the "watch" the projection stands on. */}
-          <div aria-hidden className="absolute bottom-6 left-1/2 h-1.5 w-24 -translate-x-1/2 rounded-full bg-accent/80 shadow-[0_0_18px_var(--accent),0_0_50px_oklch(0.82_0.14_205/0.5)]" />
+          <div aria-hidden className="absolute bottom-6 left-1/2 h-1.5 w-24 -translate-x-1/2 rounded-full bg-accent/80" />
 
           {phase !== 'live' && (
             <div className="absolute inset-0 grid place-items-center p-8">
@@ -211,8 +210,8 @@ const HoloDemo = (): JSX.Element => {
                   try again.
                 </p>
               ) : (
-                <p className="font-sans text-[0.9rem] uppercase tracking-[0.3em] text-faint">
-                  {phase === 'starting' ? 'Igniting…' : 'Projector standing by'}
+                <p className="font-sans text-[0.95rem] text-muted">
+                  {phase === 'starting' ? 'Starting the camera…' : 'Camera off. Start the projection to see yourself.'}
                 </p>
               )}
             </div>
@@ -221,25 +220,16 @@ const HoloDemo = (): JSX.Element => {
 
         <div className="mt-8">
           {phase === 'live' ? (
-            <button
-              type="button"
-              onClick={end}
-              className="rounded-full border border-hairline px-8 py-3.5 font-sans text-[1rem] font-medium text-muted transition-colors duration-300 hover:border-accent/50 hover:text-ink"
-            >
+            <button type="button" onClick={end} className={btnSecondary}>
               End projection
             </button>
           ) : (
-            <button
-              type="button"
-              onClick={start}
-              disabled={phase === 'starting'}
-              className="rounded-full border border-accent/40 bg-accent/10 px-8 py-3.5 font-sans text-[1rem] font-medium text-ink transition-colors duration-300 hover:bg-accent/25 disabled:cursor-wait disabled:opacity-60"
-            >
+            <button type="button" onClick={start} disabled={phase === 'starting'} className={btnPrimary}>
               {phase === 'error' ? 'Try again' : 'Project yourself'}
             </button>
           )}
         </div>
-      </Reveal>
+      </div>
     </section>
   )
 }

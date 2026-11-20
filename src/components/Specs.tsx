@@ -1,7 +1,4 @@
 import type { JSX } from 'react'
-import { m, useReducedMotion } from 'framer-motion'
-import { ease } from '../anim'
-import RevealText from './RevealText'
 
 interface Row {
   n: string
@@ -47,89 +44,43 @@ const rows: Row[] = [
   {
     n: '02',
     h: 'Lifetime nuclear cell',
-    t: 'A sealed radioisotope rod runs the Aura for a lifetime — never charged, never opened.',
+    t: 'A sealed radioisotope rod runs the Aura for a lifetime. It is never charged or opened.',
     stat: '∞',
     unit: 'years sealed',
     icon: AtomIcon,
   },
   {
     n: '03',
-    h: 'Abyss-sealed to 500 metres',
-    t: 'Sealed past where any phone would drown — and it films 4K of the deep from your wrist.',
+    h: 'Sealed to 500 metres',
+    t: 'Sealed past where any phone would drown, and it films 4K video from your wrist.',
     stat: '500',
     unit: 'm depth',
     icon: DepthIcon,
   },
 ]
 
-const SpecRow = ({ r }: { r: Row }): JSX.Element => {
-  const reduced = useReducedMotion() ?? false
+const SpecRow = ({ r }: { r: Row }): JSX.Element => (
+  <div className="relative grid grid-cols-[auto_1fr] items-center gap-x-[clamp(1rem,3vw,2.5rem)] gap-y-2 border-t border-hairline-soft py-[clamp(2rem,4.5vh,4rem)] md:grid-cols-[auto_1fr_auto]">
+    <span className="grid h-11 w-11 place-items-center self-start rounded-full border border-hairline-soft bg-bg-soft text-accent md:h-12 md:w-12">
+      <span className="h-6 w-6">{r.icon}</span>
+    </span>
 
-  // One container drives the whole row; children animate in sequence so the
-  // accent bar draws first, then the icon, number and the big stat snap up.
-  return (
-    <m.div
-      className="group relative grid grid-cols-[auto_1fr] items-center gap-x-[clamp(1rem,3vw,2.5rem)] gap-y-2 py-[clamp(2rem,4.5vh,4rem)] md:grid-cols-[auto_1fr_auto]"
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: '-12%' }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
-    >
-      {/* top hairline that draws across as the row arrives */}
-      <m.span
-        aria-hidden
-        className="absolute left-0 top-0 h-px w-full origin-left bg-linear-to-r from-accent/60 via-hairline-soft to-transparent transition-[filter] group-hover:filter-[drop-shadow(0_0_6px_var(--accent))]"
-        variants={{ hidden: { scaleX: 0, opacity: 0 }, show: { scaleX: 1, opacity: 1 } }}
-        transition={{ duration: reduced ? 0 : 0.7, ease }}
-      />
+    <div className="min-w-0">
+      <h3 className="font-display text-[clamp(1.4rem,3vw,2.4rem)] font-medium leading-[1.06]">{r.h}</h3>
+      <p className="mt-3 max-w-[52ch] font-sans text-[1.05rem] text-muted">{r.t}</p>
+    </div>
 
-      {/* index + icon stack */}
-      <m.div
-        className="flex items-center gap-3 self-start"
-        variants={{ hidden: { opacity: 0, x: -12 }, show: { opacity: 1, x: 0 } }}
-        transition={{ duration: reduced ? 0 : 0.5, ease }}
-      >
-        <span className="font-display text-[clamp(1.3rem,2.2vw,2rem)] text-accent">{r.n}</span>
-        <span className="grid h-11 w-11 place-items-center rounded-full border border-hairline-soft bg-bg-soft text-accent transition-colors group-hover:border-accent/50 group-hover:bg-accent/10 md:h-12 md:w-12">
-          <span className="h-6 w-6">{r.icon}</span>
-        </span>
-      </m.div>
-
-      {/* heading + body */}
-      <div className="min-w-0">
-        <RevealText
-          as="h3"
-          text={r.h}
-          className="font-display text-[clamp(1.4rem,3vw,2.4rem)] font-medium leading-[1.06]"
-        />
-        <RevealText
-          as="p"
-          text={r.t}
-          delay={0.1}
-          stagger={0.01}
-          duration={0.5}
-          className="mt-3 max-w-[52ch] font-sans text-[1.05rem] text-muted"
-        />
-      </div>
-
-      {/* oversized stat figure */}
-      <m.div
-        className="col-start-2 mt-1 flex items-baseline gap-2 md:col-start-3 md:mt-0 md:flex-col md:items-end md:text-right"
-        variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } }}
-        transition={{ duration: reduced ? 0 : 0.6, ease, delay: reduced ? 0 : 0.15 }}
-      >
-        <span className="font-display text-[clamp(2.6rem,7vw,5rem)] font-semibold leading-none text-gradient-accent filter-[drop-shadow(0_0_18px_oklch(0.78_0.15_200/0.35))]">
-          {r.stat}
-        </span>
-        <span className="font-sans text-[0.72rem] uppercase tracking-[0.28em] text-muted">{r.unit}</span>
-      </m.div>
-    </m.div>
-  )
-}
+    <p className="col-start-2 mt-1 flex items-baseline gap-2 md:col-start-3 md:mt-0 md:flex-col md:items-end md:text-right">
+      <span className="font-display text-[clamp(1.75rem,3vw,2.2rem)] font-semibold leading-none text-ink">{r.stat}</span>
+      <span className="font-sans text-[0.9rem] text-muted">{r.unit}</span>
+    </p>
+  </div>
+)
 
 const Specs = (): JSX.Element => {
   return (
-    <section id="specs" className="cv-section mx-auto flex min-h-svh max-w-shell snap-start flex-col justify-center px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+    <section id="specs" className="cv-section mx-auto flex min-h-svh max-w-shell flex-col justify-center px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]">
+      <h2 className="sr-only">Specifications</h2>
       {rows.map((r) => (
         <SpecRow key={r.n} r={r} />
       ))}

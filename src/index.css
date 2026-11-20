@@ -12,8 +12,8 @@
   --color-hairline: var(--hairline);
   --color-hairline-soft: var(--hairline-soft);
 
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-sans: Inter, system-ui, sans-serif;
+  --font-display: 'Instrument Sans', system-ui, sans-serif;
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
 
   --container-shell: 1320px;
 }
@@ -43,7 +43,7 @@
   --bg-soft:  oklch(0.185 0.015 243);  /* lifted panel */
   --bg-lift:  oklch(0.225 0.016 242);
   --ink:      oklch(0.962 0.006 230);  /* crisp silver white */
-  --muted:    oklch(0.680 0.016 235);  /* cool grey */
+  --muted:    oklch(0.760 0.014 235);  /* cool grey */
   --faint:    oklch(0.600 0.018 238);  /* dim label grey — kept ≥4.5:1 on bg/bg-soft for WCAG 1.4.3 AA */
   --accent:   oklch(0.820 0.140 205);  /* glowing cyan */
   --accent-deep: oklch(0.700 0.150 215);
@@ -56,27 +56,14 @@
 html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
 
-/* Section snapping was removed — the proximity snap felt abrupt while scrolling
-   through the cinematic sections, so the page now scrolls freely. The leftover
-   `snap-start` utility classes on sections are inert without a snap container. */
-
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: hidden; }
 
 body {
-  /* Pure flat black reads dead, so the base slate carries a couple of very
-     soft, diffuse cyan light pools (studio-lit feel). Attachment:fixed keeps
-     them anchored to the viewport so each screen catches a gentle, asymmetric
-     glow instead of an even void. Kept low-alpha so text contrast is untouched. */
-  background:
-    radial-gradient(48% 42% at 14% 8%,  oklch(0.36 0.08 210 / 0.11), transparent 72%),
-    radial-gradient(46% 40% at 88% 60%, oklch(0.34 0.08 200 / 0.09), transparent 72%),
-    radial-gradient(60% 45% at 50% 108%, oklch(0.30 0.07 225 / 0.08), transparent 70%),
-    var(--bg);
-  background-attachment: fixed;
+  background: var(--bg);
   color: var(--ink);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: 'Instrument Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -87,11 +74,10 @@ body {
 /* Keyboard focus is otherwise invisible on this dark theme. A bright accent ring
    on :focus-visible (keyboard / programmatic focus only, never on mouse click)
    gives every interactive element a clear, high-contrast focus indicator —
-   WCAG 2.4.7. The offset + radius keep it legible over glass and pill shapes. */
+   WCAG 2.4.7. The outline follows each element's own border radius. */
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-  border-radius: 4px;
 }
 
 /* Skip-to-content link (WCAG 2.4.1, Bypass Blocks). Visually parked off-screen
@@ -108,7 +94,7 @@ body {
   border: 1px solid var(--accent);
   background: var(--bg-soft);
   color: var(--ink);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: 'Instrument Sans', system-ui, sans-serif;
   font-size: 0.9rem;
   text-decoration: none;
   transition: transform 0.2s ease;
@@ -126,57 +112,6 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-deep); }
 
 /* ---- Utility classes ---- */
-
-.text-gradient {
-  background: linear-gradient(180deg, var(--ink) 0%, oklch(0.78 0.03 230) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-.text-gradient-accent {
-  background: linear-gradient(120deg, var(--accent) 0%, oklch(0.92 0.07 200) 50%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-/* Brushed-titanium wordmark: a metallic silver field with two specular bands
-   and a whisper of accent cyan, kept clipped to the text. A slow sheen sweep
-   makes light travel across the letters like it would over machined metal. */
-.text-titanium {
-  background:
-    linear-gradient(
-      100deg,
-      oklch(0.80 0.012 235) 0%,
-      oklch(0.97 0.006 220) 14%,
-      oklch(0.70 0.020 240) 30%,
-      oklch(0.93 0.010 205) 46%,
-      oklch(0.74 0.018 238) 60%,
-      oklch(0.99 0.020 200) 74%,
-      oklch(0.82 0.012 232) 100%
-    );
-  background-size: 230% auto;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-@keyframes titanium-sheen {
-  to { background-position: 230% 50%; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .text-titanium { animation: titanium-sheen 9s linear infinite; }
-}
-
-.glass {
-  background: oklch(0.22 0.015 242 / 0.45);
-  border: 1px solid oklch(0.6 0.02 235 / 0.16);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-@keyframes marquee { to { transform: translateX(-50%); } }
-.marquee-track { animation: marquee 32s linear infinite; will-change: transform; }
 
 /* Render-skip offscreen sections: the browser drops layout + paint for any
    section outside the viewport and uses the intrinsic-size hint to keep the
@@ -200,8 +135,7 @@ body {
   z-index: 50;
   transform-origin: 0 50%;
   scale: 0 1;
-  background: linear-gradient(90deg, var(--accent-deep), var(--accent));
-  box-shadow: 0 0 10px color-mix(in oklab, var(--accent) 70%, transparent);
+  background: var(--accent);
 }
 @supports (animation-timeline: scroll()) {
   @keyframes scroll-progress-grow { to { scale: 1 1; } }
@@ -212,29 +146,6 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-progress { display: none; }
-}
-
-/* A single bright arc of light circling the reserve button's rim. The element
-   stays put (rotating a wide pill would swing its ends out like a clock hand);
-   instead only the conic gradient's start angle animates, so the highlight
-   travels around the edge. Needs a registered custom property to be animatable. */
-@property --halo-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-.btn-halo {
-  background: conic-gradient(
-    from var(--halo-angle),
-    transparent 0deg,
-    oklch(0.88 0.14 205 / 0.9) 55deg,
-    transparent 130deg,
-    transparent 360deg
-  );
-}
-@keyframes halo-spin { to { --halo-angle: 360deg; } }
-@media (prefers-reduced-motion: no-preference) {
-  .btn-halo { animation: halo-spin 7s linear infinite; }
 }
 
 /* Native <dialog> entrance: scale + fade the panel and its backdrop in from
@@ -290,39 +201,7 @@ body {
   .holo-flicker { animation: holo-flicker 5.5s linear infinite; }
 }
 
-@keyframes holo-pan {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 200% 50%; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.12); }
-}
-.pulse-dot { animation: pulse-glow 1.2s ease-in-out infinite; }
-
-/* Gentle up/down drift for the hero wordmark — GPU-composited translateY only. */
-@keyframes float-soft {
-  0%, 100% { transform: translateY(-6px); }
-  50% { transform: translateY(6px); }
-}
-
-/* Ambient background light. Two glows breathe and barely wander around centre
-   on slow, offset periods so they never re-sync into a visible loop. Drift is
-   kept tiny (a couple of percent) so life is felt, not watched. transform/
-   opacity only => stays on the compositor; will-change keeps the layer promoted. */
-@media (prefers-reduced-motion: no-preference) {
-  .float-soft { animation: float-soft 7s ease-in-out infinite; will-change: transform; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .marquee-track,
-  .pulse-dot { animation: none !important; }
-  [style*='rotateX'], [style*='rotateY'] { transform: none !important; will-change: auto !important; }
-}
-
-@media (max-width: 767px) {
-  .glass-mobile-flat { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background: oklch(0.2 0.015 242 / 0.72) !important; }
 }

@@ -1,5 +1,5 @@
 import { useState, type CSSProperties, type JSX } from 'react'
-import Reveal from './Reveal'
+import { btnPrimary } from './buttonStyles'
 import ReserveDialog from './ReserveDialog'
 
 // The build options are purely visual: the product render is a cyan-on-black
@@ -47,48 +47,42 @@ const Configurator = (): JSX.Element => {
   return (
     <section
       id="configure"
-      className="cv-section relative snap-start overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]"
+      className="cv-section relative flex min-h-svh flex-col justify-center overflow-hidden px-[max(1.25rem,6vw)] py-[clamp(4rem,9vh,6.5rem)]"
       // Scope the accent tokens to the section so labels, swatch glows and the
       // reserve button all follow the chosen light signature.
       style={{ '--accent': signature.accent, '--accent-deep': signature.accentDeep } as CSSProperties}
     >
-      <div className="mx-auto grid max-w-shell items-center gap-12 md:grid-cols-[1.05fr_0.95fr] md:gap-16">
+      <div className="mx-auto grid w-full max-w-shell items-center gap-12 md:grid-cols-[1.05fr_0.95fr] md:gap-16">
         {/* Live preview. The filter chain (finish grade + signature hue) is
             transitioned, so every change cross-fades instead of snapping. */}
-        <Reveal className="relative flex justify-center">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[70%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-3xl transition-[background] duration-700"
-            style={{ background: `radial-gradient(circle, color-mix(in oklab, ${signature.accent} 30%, transparent), transparent 70%)` }}
-          />
+        <div className="flex justify-center">
           <picture>
             <source type="image/webp" srcSet="assets/aura_hero_800.webp 800w, assets/aura_hero_1200.webp 1200w" sizes="(min-width: 768px) 44vw, 88vw" />
             <img
               src="assets/aura_hero_1000.jpg"
               alt={`The Aura in ${finish.name} with a ${signature.name} light signature`}
-              className="relative w-full max-w-[min(88vw,30rem)] rounded-[28px] transition-[filter] duration-700"
+              className="w-full max-w-[min(88vw,30rem)] rounded-2xl transition-[filter] duration-700 motion-reduce:transition-none"
               style={{ filter: `${finish.filter} hue-rotate(${String(signature.rotate)}deg)`.trim() }}
               loading="lazy"
               decoding="async"
             />
           </picture>
-        </Reveal>
+        </div>
 
-        <Reveal delay={0.1}>
-          <p className="font-sans text-[0.74rem] uppercase tracking-[0.34em] text-accent transition-colors duration-500">Make it yours</p>
-          <h2 className="mt-4 font-display text-[clamp(2.2rem,5vw,4rem)] font-medium leading-[1.02] text-gradient">
-            One Aura. Your light.
+        <div>
+          <h2 className="font-display text-[clamp(2rem,4.4vw,3.4rem)] font-medium leading-[1.04]">
+            Choose your light signature.
           </h2>
           <p className="mt-5 max-w-[42ch] font-sans text-[1.05rem] text-muted">
-            The display, the hologram, the halo — every photon the Aura emits
-            follows one signature. Choose it, and the case it lives in.
+            The display, the hologram and the halo all follow one signature.
+            Choose it, then the case it lives in.
           </p>
 
           <fieldset className="mt-10 border-0 p-0">
-            <legend className="font-sans text-[0.78rem] uppercase tracking-[0.28em] text-faint">Light signature</legend>
+            <legend className="font-sans text-[0.9rem] text-muted">Light signature</legend>
             <div className="mt-4 flex flex-wrap gap-3">
               {SIGNATURES.map((s) => (
-                <label key={s.id} className="group flex cursor-pointer items-center gap-2.5 rounded-full border border-hairline bg-bg-soft/50 py-2 pl-2.5 pr-4 transition-colors has-checked:border-accent/60 has-checked:bg-accent/10">
+                <label key={s.id} className="group flex cursor-pointer items-center gap-2.5 min-h-11 rounded-full border border-hairline bg-bg-soft/50 py-2 pl-3 pr-4 transition-colors has-checked:border-accent/60 has-checked:bg-accent/10">
                   <input
                     type="radio"
                     name="light-signature"
@@ -98,8 +92,8 @@ const Configurator = (): JSX.Element => {
                   />
                   <span
                     aria-hidden
-                    className="h-5 w-5 rounded-full transition-shadow duration-300 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink"
-                    style={{ background: s.accent, boxShadow: signature.id === s.id ? `0 0 12px ${s.accent}` : 'none' }}
+                    className="h-5 w-5 rounded-full peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ink"
+                    style={{ background: s.accent }}
                   />
                   <span className="font-sans text-[0.9rem] text-muted transition-colors group-has-checked:text-ink">{s.name}</span>
                 </label>
@@ -108,10 +102,10 @@ const Configurator = (): JSX.Element => {
           </fieldset>
 
           <fieldset className="mt-8 border-0 p-0">
-            <legend className="font-sans text-[0.78rem] uppercase tracking-[0.28em] text-faint">Case finish</legend>
+            <legend className="font-sans text-[0.9rem] text-muted">Case finish</legend>
             <div className="mt-4 flex flex-wrap gap-3">
               {FINISHES.map((f) => (
-                <label key={f.id} className="flex cursor-pointer items-center rounded-full border border-hairline bg-bg-soft/50 px-4 py-2 transition-colors has-checked:border-accent/60 has-checked:bg-accent/10">
+                <label key={f.id} className="flex min-h-11 cursor-pointer items-center rounded-full border border-hairline bg-bg-soft/50 px-4 py-2 transition-colors has-checked:border-accent/60 has-checked:bg-accent/10">
                   <input
                     type="radio"
                     name="case-finish"
@@ -126,16 +120,12 @@ const Configurator = (): JSX.Element => {
           </fieldset>
 
           <div className="mt-10 flex flex-wrap items-center gap-6">
-            <button
-              type="button"
-              onClick={() => { setReserveOpen(true) }}
-              className="rounded-full border border-accent/40 bg-accent/10 px-8 py-3.5 font-sans text-[1rem] font-medium text-ink transition-colors duration-300 hover:bg-accent/25"
-            >
+            <button type="button" onClick={() => { setReserveOpen(true) }} className={btnPrimary}>
               Reserve this build
             </button>
-            <p aria-live="polite" className="font-mono text-[0.82rem] tabular-nums text-faint">{summary}</p>
+            <p aria-live="polite" className="font-sans text-[0.9rem] text-muted">{summary}</p>
           </div>
-        </Reveal>
+        </div>
       </div>
 
       <ReserveDialog open={reserveOpen} onClose={() => { setReserveOpen(false) }} config={summary} />
